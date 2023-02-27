@@ -30,12 +30,11 @@ const RegisterScreen = ({ navigation }) => {
     <SafeAreaView style={{ flex: 1, justifyContent: "center" }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        style={{ paddingHorizontal: 25 }}
+        style={{ paddingHorizontal: 25, marginTop: 20 }}
       >
         <View style={{ alignItems: "center" }}>
           <Image
-            height={300}
-            width={300}
+            style={{ height: 300, width: 300 }}
             source={require("../assets/images/Mobile-login-rafiki.png")}
           />
         </View>

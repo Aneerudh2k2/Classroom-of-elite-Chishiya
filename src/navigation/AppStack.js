@@ -1,15 +1,9 @@
 import { View, Text } from "react-native";
 import React from "react";
 
-const AppStack = () => {
+const AppStack = ({ navigation }) => {
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Text>AppStack</Text>
     </View>
   );

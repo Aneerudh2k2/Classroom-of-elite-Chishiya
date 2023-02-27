@@ -2,14 +2,14 @@ import { StyleSheet, View, Text } from "react-native";
 import React from "react";
 import AuthStack from "./src/navigation/AuthStack";
 
-export default function App() {
+const App = () => {
   return (
     <AuthStack />
     // <View style={styles.er}>
     //   <Text>Hello anee</Text>
     // </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -19,3 +19,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+export default App;

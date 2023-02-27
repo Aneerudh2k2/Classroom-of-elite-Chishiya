@@ -19,11 +19,10 @@ const AuthStack = () => {
         {console.log(initialRouteName)}
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
-        <Stack.screen name="AppStack" component={AppStack} />
+        <Stack.Screen name="App" component={AppStack} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
 
 export default AuthStack;
-comp;

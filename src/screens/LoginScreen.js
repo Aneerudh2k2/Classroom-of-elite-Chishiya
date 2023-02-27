@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
 
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -15,7 +15,11 @@ import InputField from "../components/InputField";
 const LoginScreen = ({ navigation }) => {
   return (
     <View style={{ flex: 1, justifyContent: "center" }}>
-      <View style={{ paddingHorizontal: 25 }}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{ paddingHorizontal: 25, marginTop: 55 }}
+      >
+        {/* <View style={{ paddingHorizontal: 25 }}> */}
         <View style={{ alignItems: "center" }}>
           <Image
             style={{ height: 300, width: 300 }}
@@ -66,7 +70,7 @@ const LoginScreen = ({ navigation }) => {
         <CustomButton
           label={"Login"}
           onPress={() => {
-            navigation.navigate("AppStack");
+            navigation.navigate("App");
           }}
         />
 
@@ -134,7 +138,7 @@ const LoginScreen = ({ navigation }) => {
             </Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 };
