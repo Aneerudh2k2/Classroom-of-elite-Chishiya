@@ -1,58 +1,135 @@
-import React from "react";
-import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
+import React, { useState, useEffect } from "react";
+
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  TextInput,
+  Alert,
+  StatusBar,
+} from "react-native";
 
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import CustomButton from "../components/CustomButton";
+import * as LocalAuth from "expo-local-authentication";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // import LoginSVG from "../assets/images/login.svg";
 // import GoogleSVG from "../assets/images/google.svg";
 // import FacebookSVG from "../assets/images/facebook.svg";
 // import TwitterSVG from "../assets/images/twitter.svg";
+// export const setLocalAuth = async (value) => {
+//   try {
+//     await AsyncStorage.setItem("isLocalAuthEnabled", value);
+//   } catch (e) {
+//     // saving error
+//     console.log(e);
+//   }
+// };
 
-import CustomButton from "../components/CustomButton";
-import InputField from "../components/InputField";
+// export const getLocalAuth = async (keyName) => {
+//   try {
+//     const isLocalAuthEnabled = await AsyncStorage.getItem(keyName);
+//     console.log("isLocalAuthEnabled", isLocalAuthEnabled);
+//     if (isLocalAuthEnabled !== null) {
+//       return isLocalAuthEnabled;
+//     } else {
+//       return null;
+//     }
+//   } catch (error) {
+//     console.log(error.message);
+//   }
+// };
 
 const LoginScreen = ({ navigation }) => {
+  const [email, setEmail] = useState("");
+  let [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    async function authenticate() {
+      const result = await LocalAuth.authenticateAsync();
+      setIsAuthenticated(result.success);
+    }
+    authenticate();
+  }, []);
+
   return (
-    <View style={{ flex: 1, justifyContent: "center" }}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={{ paddingHorizontal: 25, marginTop: 55 }}
-      >
-        {/* <View style={{ paddingHorizontal: 25 }}> */}
-        <View style={{ alignItems: "center" }}>
-          <Image
-            style={{ height: 300, width: 300 }}
-            source={require("../assets/images/Mobile-login-amico.png")}
-          />
-        </View>
+    <>
+      <StatusBar
+        animated={true}
+        backgroundColor="#CC9FB5"
+        barStyle="light-content"
+        showHideTransition="fade"
+        hidden={false}
+      />
+      <View style={{ flex: 1, justifyContent: "center" }}>
+        {isAuthenticated ? (
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            style={{ paddingHorizontal: 25, marginTop: 55 }}
+          >
+            {/* <View style={{ paddingHorizontal: 25 }}> */}
+            <View style={{ alignItems: "center" }}>
+              <Image
+                style={{ height: 300, width: 300 }}
+                source={require("../assets/images/Mobile-login-amico.png")}
+              />
+            </View>
 
-        <Text
-          style={{
-            // fontFamily: "Roboto-Medium",
-            fontSize: 28,
-            fontWeight: "500",
-            color: "#333",
-            marginBottom: 30,
-          }}
-        >
-          Login
-        </Text>
-
+            <Text
+              style={{
+                // fontFamily: "Roboto-Medium",
+                fontSize: 28,
+                fontWeight: "500",
+                color: "#333",
+                marginBottom: 30,
+              }}
+            >
+              Login
+            </Text>
+            {/* 
         <InputField
-          label={"Email ID"}
+          label={"Email ID or Phone number with country code"}
           icon={
             <MaterialIcons
               name="alternate-email"
               size={20}
               color="#666"
-              style={{ marginRight: 5 }}
+              style={{ marginRight: 6 }}
             />
           }
           keyboardType="email-address"
-        />
+        /> */}
+            <View
+              style={{
+                flexDirection: "row",
+                borderBottomColor: "#ccc",
+                borderBottomWidth: 1,
+                paddingBottom: 8,
+                marginBottom: 25,
+              }}
+            >
+              <MaterialIcons
+                name="alternate-email"
+                size={20}
+                color="#666"
+                style={{ marginRight: 5 }}
+              />
 
-        <InputField
+              <TextInput
+                placeholder={"Email ID"}
+                keyboardType="email-address"
+                style={{ flex: 1, paddingVertical: 0 }}
+                cursorColor={"#AD40AF"}
+                autoCorrect={true}
+                onChangeText={setEmail}
+                value={email}
+              />
+            </View>
+
+            {/* <InputField
           label={"Password"}
           icon={
             <Ionicons
@@ -65,20 +142,45 @@ const LoginScreen = ({ navigation }) => {
           inputType="password"
           fieldButtonLabel={"Forgot?"}
           fieldButtonFunction={() => {}}
-        />
+        /> */}
 
-        <CustomButton
-          label={"Login"}
-          onPress={() => {
-            navigation.navigate("App");
-          }}
-        />
+            <CustomButton
+              label={"Send OTP"}
+              onPress={async () => {
+                navigation.navigate("OTP", {
+                  email: "devcrazapp@gmail.com",
+                });
+                // console.log(email);
+                // let response = await fetch(
+                //   "http://192.168.43.99:5000/api/auth/signinup/code/",
+                //   {
+                //     method: "POST",
+                //     mode: "cors", // no-cors, *cors, same-origin
+                //     cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+                //     credentials: "same-origin",
+                //     headers: { "Content-Type": "application/json" },
+                //     body: JSON.stringify({
+                //       email: email,
+                //     }),
+                //   }
+                // );
+                // response = await response.json();
+                // console.log(response);
+                // if (response.status === "OK") {
+                //   navigation.navigate("OTP", {email});
+                // } else {
+                //   Alert.alert("Failed to login!!", "Try again");
+                // }
+              }}
+            />
 
-        <Text style={{ textAlign: "center", color: "#666", marginBottom: 30 }}>
-          Or, login with ...
-        </Text>
+            <Text
+              style={{ textAlign: "center", color: "#666", marginBottom: 30 }}
+            >
+              Or, login with ...
+            </Text>
 
-        {/* <View
+            {/* <View
           style={{
             flexDirection: "row",
             justifyContent: "space-between",
@@ -123,23 +225,29 @@ const LoginScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View> */}
 
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            marginBottom: 30,
-          }}
-        >
-          <Text>New to the app?</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-            <Text style={{ color: "#AD40AF", fontWeight: "700" }}>
-              {" "}
-              Register
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    </View>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                marginBottom: 30,
+              }}
+            >
+              <Text>New to the app?</Text>
+              <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+                <Text style={{ color: "#AD40AF", fontWeight: "700" }}>
+                  {" "}
+                  Register
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        ) : (
+          <View style={{ justifyContent: "center", alignItems: "center" }}>
+            <Text>{!isAuthenticated ? "" : "Access Denied!!"}</Text>
+          </View>
+        )}
+      </View>
+    </>
   );
 };
 
