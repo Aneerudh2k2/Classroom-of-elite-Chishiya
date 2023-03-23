@@ -7,6 +7,7 @@ import {
   Animated,
   TouchableOpacity,
   ImageBackground,
+  Keyboard,
 } from "react-native";
 import React, { useRef, useState, useEffect } from "react";
 import QRCode from "react-native-qrcode-svg";
@@ -16,60 +17,36 @@ import * as Clipboard from "expo-clipboard";
 
 const WalletScreen = () => {
   const flipAnimation = useRef(new Animated.Value(0)).current;
+  const [isFlipped, setIsFlipped] = useState(false);
   const qrRef = useRef();
   const [copiedText, setCopiedText] = React.useState("");
-
-  let flipRotation = 0;
-  flipAnimation.addListener(({ value }) => (flipRotation = value));
-  const flipToFrontStyle = {
-    transform: [
-      {
-        rotateY: flipAnimation.interpolate({
-          inputRange: [0, 180],
-          outputRange: ["0deg", "180deg"],
-        }),
-      },
-    ],
-  };
-  const flipToBackStyle = {
-    transform: [
-      {
-        rotateY: flipAnimation.interpolate({
-          inputRange: [0, 180],
-          outputRange: ["180deg", "360deg"],
-        }),
-      },
-    ],
-  };
-
-  const flipToFront = () => {
-    Animated.timing(flipAnimation, {
-      toValue: 180,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  const flipToBack = () => {
-    Animated.timing(flipAnimation, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  };
 
   const copyToClipboard = async (value) => {
     await Clipboard.setStringAsync(value);
   };
 
-  // const walletAddress = async () => {
-  //   const wallet = ethers.Wallet.createRandom();
-  //   return wallet.address;
-  // };
+  const handleFlip = () => {
+    setIsFlipped(!isFlipped);
 
-  const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
-  const AnimatedImageBackground =
-    Animated.createAnimatedComponent(ImageBackground);
+    Animated.timing(flipAnimation, {
+      toValue: isFlipped ? 0 : 180,
+      duration: 500,
+      useNativeDriver: false,
+    }).start();
+  };
+
+  const frontInterpolate = flipAnimation.interpolate({
+    inputRange: [0, 180],
+    outputRange: ["0deg", "180deg"],
+  });
+
+  const backInterpolate = flipAnimation.interpolate({
+    inputRange: [0, 180],
+    outputRange: ["180deg", "360deg"],
+  });
+
+  // const AnimatedImageBackground =
+  //   Animated.createAnimatedComponent(ImageBackground);
 
   const value = "0x64a7885CB27dc6C18096E97705C45C997d943240";
   return (
@@ -80,75 +57,217 @@ const WalletScreen = () => {
         alignItems: "center",
       }}
     >
+      {/* Card UI section */}
       <View
         style={{
-          flex: 0.5,
+          flex: 0.55,
           // backgroundColor: "#E6AACE",
           margin: 5,
           width: "95%",
           justifyContent: "space-evenly",
+          alignItems: "center",
           padding: 10,
         }}
       >
-        <View style={{ marginLeft: 15 }}>
-          <Text style={{ fontSize: 22, color: "#B619A7" }}>Wallet Details</Text>
+        <View style={{ flex: 0.125, marginLeft: 15 }}>
+          <Text style={{ fontSize: 20, color: "#B619A7" }}>Wallet Details</Text>
         </View>
 
-        <AnimatedTouchable
+        <TouchableOpacity
           style={{
-            flex: 0.8,
+            flex: 0.875,
             alignItems: "center",
             justifyContent: "center",
-            backgroundColor: "#fff",
-            borderRadius: 30,
-            elevation: 1,
+            height: "100%",
+            width: "60%",
+            // borderRadius: 15,
+            // padding: 5,
+            // elevation: 1,
+            // backgroundColor: "#E6AACE",
+            // backgroundColor: "#fff",
+            // borderRadius: 30,
+            // elevation: 1,
           }}
-          // onPress={() => (!!flipRotation ? flipToBack() : flipToFront())}
+          onPress={handleFlip}
         >
-          <AnimatedImageBackground
-            source={{
-              uri: "https://img.freepik.com/free-photo/blue-abstract-gradient-wave-wallpaper_53876-108364.jpg?w=1380&t=st=1678389032~exp=1678389632~hmac=c6c573b33f561636233cb2afda8564458c5e490aa38e2e66576d33225d28f5d9",
-            }}
+          {/* Card front */}
+          <Animated.View
             style={{
-              ...flipToFrontStyle,
               flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
               height: "100%",
               width: "100%",
-              // alignItems: "center",
-              // position: "absolute",
+              backgroundColor: "#E6AACE",
+              // backgroundColor: "#fff",
+              borderRadius: 15,
+              padding: 5,
+              // elevation: 1,
+              backfaceVisibility: "hidden",
+              position: "absolute",
+              transform: [
+                {
+                  rotateY: frontInterpolate,
+                },
+              ],
             }}
-            imageStyle={{ borderRadius: 30, padding: 5 }}
           >
             <View
               style={{
-                flex: 0.25,
+                flex: 0.1,
+                // backgroundColor: "#000",
+                width: "100%",
+                marginLeft: 10,
+              }}
+            >
+              <Text
+                style={{
+                  color: "#f5e5fc",
+                  fontSize: 14,
+                  fontWeight: 800,
+                }}
+              >
+                JREX
+              </Text>
+            </View>
+
+            <View
+              style={{
+                flex: 0.3,
                 // backgroundColor: "#fff",
                 flexDirection: "row",
                 justifyContent: "space-between",
+                alignItems: "center",
                 width: "100%",
               }}
             >
-              <View style={{ flex: 0.5, marginLeft: 15, marginTop: 20 }}>
-                <MaterialCommunityIcons
-                  name={"contactless-payment"}
-                  size={23}
-                  color={"#000"}
+              <View
+                style={{
+                  flex: 0.625,
+                  // backgroundColor: "#B619A7",
+                  height: "100%",
+                  alignItems: "flex-end",
+                  justifyContent: "center",
+                  // padding: 10,
+                  // marginRight: 15,
+                  // marginTop: 10,
+                }}
+              >
+                <Image
+                  source={require("../assets/images/emv_chip.png")}
+                  style={{
+                    height: 40,
+                    width: 40,
+                    transform: [{ rotate: "90deg" }],
+                  }}
                 />
               </View>
 
+              <View style={{ flex: 0.375, marginLeft: 10 }}>
+                <MaterialCommunityIcons
+                  name={"contactless-payment"}
+                  size={23}
+                  color={"#fff"}
+                />
+              </View>
+            </View>
+
+            <View
+              style={{
+                flex: 0.6,
+                // padding: 9,
+                // backgroundColor: "#fff",
+              }}
+            >
+              {/* Username and wallet name */}
               <View
                 style={{
-                  flex: 0.5,
-                  flexDirection: "row",
-                  justifyContent: "flex-end",
-                  // backgroundColor: "#B619A7",
-                  padding: 10,
-                  marginRight: 15,
-                  marginTop: 10,
+                  flex: 0.8,
+                  // justifyContent: "space-around",
+                  alignItems: "center",
+                  paddingTop: 5,
                 }}
               >
-                <Text style={{ color: "#084c61", fontSize: 16 }}>Chishiya</Text>
+                <Text
+                  style={{ fontSize: 20, fontWeight: "900", color: "#fff" }}
+                >
+                  Chishiya
+                </Text>
+                <Text
+                  style={{ fontSize: 12.5, fontWeight: "100", color: "#fff" }}
+                >
+                  Satoshi Nakamoto
+                </Text>
               </View>
+
+              {/* Tap or swipe to show qr code */}
+              <View
+                style={{ flex: 0.2, flexDirection: "row", paddingBottom: 5 }}
+              >
+                <View>
+                  <Text
+                    style={{ fontSize: 12.5, color: "#fff", fontWeight: "100" }}
+                  >
+                    Tap for wallet details{" "}
+                  </Text>
+                </View>
+                <MaterialCommunityIcons
+                  name={"gesture-tap"}
+                  size={25}
+                  color={"#fff"}
+                />
+              </View>
+            </View>
+          </Animated.View>
+
+          {/* Card back */}
+          <Animated.View
+            style={[
+              {
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+                height: "100%",
+                width: "100%",
+                backgroundColor: "#E6AACE",
+                // backgroundColor: "#fff",
+                borderRadius: 15,
+                padding: 5,
+                // elevation: 1,
+                backfaceVisibility: "hidden",
+                position: "absolute",
+              },
+              {
+                transform: [{ rotateY: "180deg" }],
+                // backgroundColor: '#f0f0f0',
+                backgroundColor: "#E6AACE",
+              },
+              {
+                transform: [
+                  {
+                    rotateY: backInterpolate,
+                  },
+                ],
+              },
+            ]}
+          >
+            <View
+              style={{
+                flex: 0.15,
+                // backgroundColor: "#000",
+                width: "100%",
+                marginLeft: 10,
+              }}
+            >
+              <Text
+                style={{
+                  color: "#f5e5fc",
+                  fontSize: 14,
+                  fontWeight: 800,
+                }}
+              >
+                JREX
+              </Text>
             </View>
 
             <View
@@ -156,23 +275,28 @@ const WalletScreen = () => {
                 flex: 0.75,
                 // padding: 9,
                 // backgroundColor: "#fff",
-                flexDirection: "row",
+                alignItems: "center",
               }}
             >
               {/* QR CODE for wallet address */}
               <View
                 style={{
-                  flex: 0.45,
+                  flex: 0.55,
                   justifyContent: "center",
                   alignItems: "center",
+                  paddingVertical: 2,
+                  paddingHorizontal: 5,
+                  borderRadius: 4,
+                  // width: "100%",
+                  backgroundColor: "#fff",
                 }}
               >
                 <QRCode
                   value={JSON.stringify({
                     address: "0x64a7885CB27dc6C18096E97705C45C997d943240",
                   })}
-                  size={125}
-                  color="#084c61"
+                  size={110}
+                  color="#B619A7"
                   // backgroundColor="white"
                   getRef={qrRef}
                 />
@@ -180,36 +304,50 @@ const WalletScreen = () => {
 
               <View
                 style={{
-                  flex: 0.55,
+                  flex: 0.45,
                   justifyContent: "center",
                   // backgroundColor: "#fff",
                   alignItems: "center",
+                  width: "100%",
                 }}
               >
-                <Text style={{ fontSize: 15 }}>Wallet Address</Text>
+                <Text style={{ fontSize: 15, color: "#fff" }}>
+                  Wallet Address
+                </Text>
 
                 <View
                   style={{
                     marginTop: 10,
-                    borderWidth: 0.1,
-                    borderRadius: 1,
+                    // borderWidth: 0.1,
+                    borderRadius: 3,
                     flexDirection: "row",
                     alignItems: "center",
                     justifyContent: "space-between",
+                    borderColor: "#fff",
+                    backgroundColor: "#B619A7",
                     padding: 5,
+                    // elevation: 1,
                   }}
                 >
                   <View
                     style={{
                       flex: 0.8,
                       justifyContent: "center",
+                      // padding: 3,
                       // alignItems: "center",
                       // backgroundColor: "#fff",
                     }}
                   >
                     <TextInput
+                      // onFocus={Keyboard.dismiss}
+                      showSoftInputOnFocus={false}
                       value={value}
-                      style={{ height: 22, width: "80%", fontSize: 8 }}
+                      style={{
+                        height: 25,
+                        width: "100%",
+                        fontSize: 9,
+                        color: "#fff",
+                      }}
                       multiline={true}
                     />
                   </View>
@@ -223,14 +361,32 @@ const WalletScreen = () => {
                   >
                     <MaterialCommunityIcons
                       name={"content-copy"}
-                      size={16}
-                      color={"#000"}
+                      size={20}
+                      color={"#fff"}
                     />
                   </TouchableOpacity>
                 </View>
               </View>
             </View>
-          </AnimatedImageBackground>
+
+            <View style={{ flex: 0.1, flexDirection: "row", paddingBottom: 5 }}>
+              <View>
+                <Text
+                  style={{ fontSize: 12.5, color: "#fff", fontWeight: "100" }}
+                >
+                  Tap for wallet card{" "}
+                </Text>
+              </View>
+              <MaterialCommunityIcons
+                name={"gesture-tap"}
+                size={25}
+                color={"#fff"}
+              />
+            </View>
+          </Animated.View>
+
+          {/* </AnimatedImageBackground> */}
+
           {/* {!flipRotation ? (
             <AnimatedImageBackground
               source={{
@@ -270,12 +426,12 @@ const WalletScreen = () => {
               <Text>Back</Text>
             </AnimatedImageBackground>
           )} */}
-        </AnimatedTouchable>
+        </TouchableOpacity>
       </View>
 
       <View
         style={{
-          flex: 0.5,
+          flex: 0.45,
           justifyContent: "center",
           // backgroundColor: "#fff",
           width: "90%",
