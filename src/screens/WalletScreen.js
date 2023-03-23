@@ -12,10 +12,11 @@ import {
 import React, { useRef, useState, useEffect } from "react";
 import QRCode from "react-native-qrcode-svg";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import Feather from "react-native-vector-icons/Feather";
 import * as Clipboard from "expo-clipboard";
 // import { ethers } from "ethers";
 
-const WalletScreen = () => {
+const WalletScreen = ({ navigation }) => {
   const flipAnimation = useRef(new Animated.Value(0)).current;
   const [isFlipped, setIsFlipped] = useState(false);
   const qrRef = useRef();
@@ -127,7 +128,7 @@ const WalletScreen = () => {
                   fontWeight: 800,
                 }}
               >
-                JREX
+                JREX Token
               </Text>
             </View>
 
@@ -266,7 +267,7 @@ const WalletScreen = () => {
                   fontWeight: 800,
                 }}
               >
-                JREX
+                JREX Token
               </Text>
             </View>
 
@@ -433,30 +434,108 @@ const WalletScreen = () => {
         style={{
           flex: 0.45,
           justifyContent: "center",
+          // alignItems: "center",
           // backgroundColor: "#fff",
           width: "90%",
         }}
       >
-        <View style={{ flex: 0.15, marginLeft: 15 }}>
+        <View style={{ flex: 0.15, marginLeft: 15, alignItems: "center" }}>
           <Text style={{ fontSize: 22, color: "#B619A7" }}>
-            Price Chart of JREX Token
+            Balance and History
           </Text>
         </View>
 
         <View
           style={{
             flex: 0.8,
-            borderRadius: 20,
-            elevation: 5,
-            backgroundColor: "#fff",
-            justifyContent: "center",
-            alignItems: "center",
+            // borderWidth: 1,
+            // borderRadius: 20,
+            // elevation: 1,
+            // backgroundColor: "#fff",
+            margin: 13,
+            justifyContent: "space-around",
+            // alignItems: "center",
           }}
         >
-          <Image
+          <View style={{ flex: 0.4, backgroundColor: "#fff" }}>
+            <Text>Balance</Text>
+          </View>
+
+          <View
+            style={{
+              flex: 0.45,
+              flexDirection: "row",
+              justifyContent: "space-evenly",
+              borderRadius: 15,
+              // backgroundColor: "#fff",
+              // elevation: 1,
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
+            <TouchableOpacity
+              style={{
+                // borderWidth: 1,
+                backgroundColor: "#E6AACE",
+                // elevation: 1,
+                padding: 4,
+                paddingHorizontal: 10,
+                borderRadius: 48,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <MaterialCommunityIcons
+                name={"plus"}
+                size={30}
+                color={"purple"}
+              />
+              <Text style={{ fontSize: 11, color: "#AD40AF" }}>TopUp</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={{
+                // borderWidth: 1,
+                backgroundColor: "#E6AACE",
+                elevation: 1,
+                padding: 4,
+                paddingHorizontal: 12,
+                borderRadius: 48,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              onPress={() => {
+                navigation.navigate("Transfer");
+              }}
+            >
+              <Feather name={"send"} size={30} color={"purple"} />
+              <Text style={{ fontSize: 11, color: "#AD40AF" }}>Send</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={{
+                // borderWidth: 1,
+                backgroundColor: "#E6AACE",
+                elevation: 1,
+                padding: 4,
+                paddingHorizontal: 10,
+                borderRadius: 48,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <MaterialCommunityIcons
+                name={"history"}
+                size={30}
+                color={"purple"}
+              />
+              <Text style={{ fontSize: 11, color: "#AD40AF" }}>History</Text>
+            </TouchableOpacity>
+          </View>
+          {/* <Image
             source={require("../assets/images/ethreum.png")}
             style={{ height: "90%", width: "100%" }}
-          />
+          /> */}
         </View>
       </View>
     </View>
