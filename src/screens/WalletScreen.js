@@ -14,6 +14,7 @@ import QRCode from "react-native-qrcode-svg";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Feather from "react-native-vector-icons/Feather";
 import * as Clipboard from "expo-clipboard";
+import { LinearGradient } from "expo-linear-gradient";
 // import { ethers } from "ethers";
 
 const WalletScreen = ({ navigation }) => {
@@ -297,7 +298,8 @@ const WalletScreen = ({ navigation }) => {
                     address: "0x64a7885CB27dc6C18096E97705C45C997d943240",
                   })}
                   size={110}
-                  color="#B619A7"
+                  // color="#B619A7"
+                  color="#000"
                   // backgroundColor="white"
                   getRef={qrRef}
                 />
@@ -457,9 +459,12 @@ const WalletScreen = ({ navigation }) => {
             // alignItems: "center",
           }}
         >
-          <View style={{ flex: 0.4, backgroundColor: "#fff" }}>
+          <View
+            style={{ flex: 0.4, borderRadius: 15, backgroundColor: "#fff" }}
+          >
             <Text>Balance</Text>
           </View>
+          {/* <Text>Balance</Text> */}
 
           <View
             style={{

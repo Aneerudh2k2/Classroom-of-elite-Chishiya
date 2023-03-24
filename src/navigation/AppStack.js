@@ -1,4 +1,4 @@
-import { View, Text, Alert } from "react-native";
+import { Alert, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 
 // Screen imports
@@ -10,6 +10,7 @@ import ProfileScreen from "../screens/ProfileScreen";
 
 // Icon imports
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Entypo from "react-native-vector-icons/Entypo";
 import Fontisto from "react-native-vector-icons/Fontisto";
 // import { getLocalAuth, setLocalAuth } from "../screens/LoginScreen";
@@ -40,6 +41,10 @@ const AppStack = ({ navigation }) => {
     //   localAuthPermission();
     // }
   }, []);
+
+  const handleQR = () => {
+    navigation.navigate("QR");
+  };
 
   return (
     <Tab.Navigator
@@ -93,6 +98,7 @@ const AppStack = ({ navigation }) => {
         options={({ navigation }) => ({
           title: "Transfer",
           headerTitleAlign: "center",
+          headerRightContainerStyle: { paddingRight: 15 },
           headerTitleStyle: { fontSize: 17, fontWeight: 600 },
           tabBarIcon: ({ focused, color, size }) => {
             return (
@@ -103,6 +109,15 @@ const AppStack = ({ navigation }) => {
               />
             );
           },
+          headerRight: () => (
+            <TouchableOpacity onPress={handleQR}>
+              <MaterialCommunityIcons
+                name="qrcode-scan"
+                size={30}
+                color={"#B619A7"}
+              />
+            </TouchableOpacity>
+          ),
         })}
       />
       <Tab.Screen

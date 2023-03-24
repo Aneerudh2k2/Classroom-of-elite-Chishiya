@@ -6,6 +6,7 @@ import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import AppStack from "../navigation/AppStack";
 import OtpVerificationScreen from "../screens/OtpVerificationScreen";
+import QRCodeScanner from "../screens/QRCodeScanner";
 
 const Stack = createNativeStackNavigator();
 
@@ -21,6 +22,7 @@ const AuthStack = () => {
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="OTP" component={OtpVerificationScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
+        <Stack.Screen name="QR" component={QRCodeScanner} />
         <Stack.Screen name="App" component={AppStack} />
       </Stack.Navigator>
     </NavigationContainer>
