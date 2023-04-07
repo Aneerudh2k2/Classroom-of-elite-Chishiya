@@ -14,7 +14,7 @@ import QRCode from "react-native-qrcode-svg";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Feather from "react-native-vector-icons/Feather";
 import * as Clipboard from "expo-clipboard";
-import { LinearGradient } from "expo-linear-gradient";
+import LottieView from "lottie-react-native";
 // import { ethers } from "ethers";
 
 const WalletScreen = ({ navigation }) => {
@@ -22,6 +22,7 @@ const WalletScreen = ({ navigation }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const qrRef = useRef();
   const [copiedText, setCopiedText] = React.useState("");
+  const [balance, setBalance] = React.useState((0.0).toPrecision(3));
 
   const copyToClipboard = async (value) => {
     await Clipboard.setStringAsync(value);
@@ -129,7 +130,7 @@ const WalletScreen = ({ navigation }) => {
                   fontWeight: 800,
                 }}
               >
-                JREX Token
+                JREX Coin
               </Text>
             </View>
 
@@ -460,9 +461,49 @@ const WalletScreen = ({ navigation }) => {
           }}
         >
           <View
-            style={{ flex: 0.4, borderRadius: 15, backgroundColor: "#fff" }}
+            style={{
+              flex: 0.4,
+              borderRadius: 15,
+              backgroundColor: "#fff",
+              elevation: 1,
+              paddingHorizontal: 15,
+              // paddingVertical: 3,
+              paddingTop: 6,
+              justifyContent: "space-evenly",
+              flexDirection: "row",
+              // alignItems: "center",
+            }}
           >
-            <Text>Balance</Text>
+            <View style={{ flex: 0.7 }}>
+              <View style={{ flex: 0.3 }}>
+                <Text style={{ fontSize: 12 }}>Current Balance</Text>
+              </View>
+
+              <View style={{ flex: 0.7 }}>
+                <Text
+                  style={{
+                    fontSize: 25,
+                    color: "#AD40AF",
+                    // backgroundColor: "#000",
+                  }}
+                >
+                  JREX {balance}
+                </Text>
+              </View>
+            </View>
+
+            <View style={{ flex: 0.3 }}>
+              <LottieView
+                autoPlay
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  backgroundColor: "#fff",
+                }}
+                // Find more Lottie files at https://lottiefiles.com/featured
+                source={require("../assets/lottie/Progress.json")}
+              />
+            </View>
           </View>
           {/* <Text>Balance</Text> */}
 
