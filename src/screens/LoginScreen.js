@@ -48,10 +48,15 @@ const LoginScreen = ({ navigation }) => {
   let [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    async function authenticate() {
+    const authenticate = async () => {
       const result = await LocalAuth.authenticateAsync();
-      setIsAuthenticated(result.success);
-    }
+      if (!result.success) {
+        console.log(result);
+      } else {
+        setIsAuthenticated(result.success);
+        navigation.navigate("App", { screen: "Wallet" });
+      }
+    };
     authenticate();
   }, []);
 
@@ -103,6 +108,7 @@ const LoginScreen = ({ navigation }) => {
           }
           keyboardType="email-address"
         /> */}
+
           <View
             style={{
               flexDirection: "row",
@@ -129,22 +135,20 @@ const LoginScreen = ({ navigation }) => {
               value={email}
             />
           </View>
-
           {/* <InputField
-          label={"Password"}
-          icon={
-            <Ionicons
-              name="ios-lock-closed-outline"
-              size={20}
-              color="#666"
-              style={{ marginRight: 5 }}
-            />
-          }
-          inputType="password"
-          fieldButtonLabel={"Forgot?"}
-          fieldButtonFunction={() => {}}
-        /> */}
-
+        //   label={"Password"}
+        //   icon={
+        //     <Ionicons
+        //       name="ios-lock-closed-outline"
+        //       size={20}
+        //       color="#666"
+        //       style={{ marginRight: 5 }}
+        //     />
+        //   }
+        //   inputType="password"
+        //   fieldButtonLabel={"Forgot?"}
+        //   fieldButtonFunction={() => {}}
+        // /> */}
           <CustomButton
             label={"Send OTP"}
             onPress={async () => {
@@ -174,7 +178,6 @@ const LoginScreen = ({ navigation }) => {
               // }
             }}
           />
-
           <Text
             style={{ textAlign: "center", color: "#666", marginBottom: 30 }}
           >
@@ -182,50 +185,49 @@ const LoginScreen = ({ navigation }) => {
           </Text>
 
           {/* <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginBottom: 30,
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => {}}
-            style={{
-              borderColor: "#ddd",
-              borderWidth: 2,
-              borderRadius: 10,
-              paddingHorizontal: 30,
-              paddingVertical: 10,
-            }}
-          >
-            <GoogleSVG height={24} width={24} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {}}
-            style={{
-              borderColor: "#ddd",
-              borderWidth: 2,
-              borderRadius: 10,
-              paddingHorizontal: 30,
-              paddingVertical: 10,
-            }}
-          >
-            <FacebookSVG height={24} width={24} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {}}
-            style={{
-              borderColor: "#ddd",
-              borderWidth: 2,
-              borderRadius: 10,
-              paddingHorizontal: 30,
-              paddingVertical: 10,
-            }}
-          >
-            <TwitterSVG height={24} width={24} />
-          </TouchableOpacity>
-        </View> */}
-
+        //   style={{
+        //     flexDirection: "row",
+        //     justifyContent: "space-between",
+        //     marginBottom: 30,
+        //   }}
+        // >
+        //   <TouchableOpacity
+        //     onPress={() => {}}
+        //     style={{
+        //       borderColor: "#ddd",
+        //       borderWidth: 2,
+        //       borderRadius: 10,
+        //       paddingHorizontal: 30,
+        //       paddingVertical: 10,
+        //     }}
+        //   >
+        //     <GoogleSVG height={24} width={24} />
+        //   </TouchableOpacity>
+        //   <TouchableOpacity
+        //     onPress={() => {}}
+        //     style={{
+        //       borderColor: "#ddd",
+        //       borderWidth: 2,
+        //       borderRadius: 10,
+        //       paddingHorizontal: 30,
+        //       paddingVertical: 10,
+        //     }}
+        //   >
+        //     <FacebookSVG height={24} width={24} />
+        //   </TouchableOpacity>
+        //   <TouchableOpacity
+        //     onPress={() => {}}
+        //     style={{
+        //       borderColor: "#ddd",
+        //       borderWidth: 2,
+        //       borderRadius: 10,
+        //       paddingHorizontal: 30,
+        //       paddingVertical: 10,
+        //     }}
+        //   >
+        //     <TwitterSVG height={24} width={24} />
+        //   </TouchableOpacity>
+        // </View> */}
           <View
             style={{
               flexDirection: "row",

@@ -294,7 +294,8 @@ const OtpVerificationScreen = ({ navigation, route }) => {
           <CustomButton
             label={"Verify"}
             onPress={() => {
-              navigation.navigate("App");
+              navigation.navigate("App", { screen: "Wallet" });
+              // navigation.navigate("QR");
             }}
           />
         </View>

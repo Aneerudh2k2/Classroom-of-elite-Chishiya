@@ -2,7 +2,6 @@ import {
   View,
   Text,
   Image,
-  Pressable,
   TextInput,
   Animated,
   TouchableOpacity,
@@ -23,6 +22,43 @@ const WalletScreen = ({ navigation }) => {
   const qrRef = useRef();
   const [copiedText, setCopiedText] = React.useState("");
   const [balance, setBalance] = React.useState((0.0).toPrecision(3));
+  const [loading, setLoading] = useState(false);
+
+  const handleApi = async () => {
+    try {
+      setLoading(true);
+      let result = await fetch("https://randomuser.me/api?results=150");
+      result = await result.json();
+      if (result.results.length !== 0) {
+        console.log(result);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    handleApi();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        {/* <Text>Loading.....</Text> */}
+        <LottieView
+          autoPlay
+          speed={3}
+          style={{
+            width: 100,
+            height: 100,
+            // backgroundColor: "#fff",
+          }}
+          // Find more Lottie files at https://lottiefiles.com/featured
+          source={require("../assets/lottie/55607-flying-wallet-money.json")}
+        />
+      </View>
+    );
+  }
 
   const copyToClipboard = async (value) => {
     await Clipboard.setStringAsync(value);
@@ -60,6 +96,7 @@ const WalletScreen = ({ navigation }) => {
         alignItems: "center",
       }}
     >
+      {console.log("Wallet screen")}
       {/* Card UI section */}
       <View
         style={{
@@ -450,7 +487,7 @@ const WalletScreen = ({ navigation }) => {
 
         <View
           style={{
-            flex: 0.8,
+            flex: 0.7,
             // borderWidth: 1,
             // borderRadius: 20,
             // elevation: 1,
@@ -460,31 +497,57 @@ const WalletScreen = ({ navigation }) => {
             // alignItems: "center",
           }}
         >
-          <View
+          <ImageBackground
+            source={require("../assets/images/Night_Fade.png")}
+            borderRadius={15}
             style={{
-              flex: 0.4,
+              flex: 0.5,
               borderRadius: 15,
-              backgroundColor: "#fff",
               elevation: 1,
-              paddingHorizontal: 15,
+              // paddingHorizontal: 15,
               // paddingVertical: 3,
-              paddingTop: 6,
-              justifyContent: "space-evenly",
+              // paddingTop: 6,
+              // justifyContent: "center",
               flexDirection: "row",
-              // alignItems: "center",
+              alignItems: "center",
             }}
           >
-            <View style={{ flex: 0.7 }}>
-              <View style={{ flex: 0.3 }}>
-                <Text style={{ fontSize: 12 }}>Current Balance</Text>
+            <View
+              style={{
+                flex: 0.65,
+                // alignItems: "center",
+                // backgroundColor: "#ad40af",
+                // justifyContent: "center",
+                marginHorizontal: 10,
+              }}
+            >
+              <View
+                style={{
+                  flex: 0.3,
+                  // backgroundColor: "#ad40af",
+                  justifyContent: "center",
+                  marginLeft: 15,
+                }}
+              >
+                <Text
+                  style={{ fontSize: 15, color: "#fff", fontWeight: "600" }}
+                >
+                  Balance
+                </Text>
               </View>
 
-              <View style={{ flex: 0.7 }}>
+              <View
+                style={{
+                  flex: 0.6,
+                  // backgroundColor: "#000",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
                 <Text
                   style={{
-                    fontSize: 25,
+                    fontSize: 27,
                     color: "#AD40AF",
-                    // backgroundColor: "#000",
                   }}
                 >
                   JREX {balance}
@@ -492,24 +555,29 @@ const WalletScreen = ({ navigation }) => {
               </View>
             </View>
 
-            <View style={{ flex: 0.3 }}>
+            <View
+              style={{
+                flex: 0.35,
+                // backgroundColor: "#ad40af",
+              }}
+            >
               <LottieView
                 autoPlay
                 style={{
                   width: "100%",
                   height: "100%",
-                  backgroundColor: "#fff",
+                  // backgroundColor: "#fff",
                 }}
                 // Find more Lottie files at https://lottiefiles.com/featured
-                source={require("../assets/lottie/Progress.json")}
+                source={require("../assets/lottie/298-coins-lineal.json")}
               />
             </View>
-          </View>
+          </ImageBackground>
           {/* <Text>Balance</Text> */}
 
           <View
             style={{
-              flex: 0.45,
+              flex: 0.3,
               flexDirection: "row",
               justifyContent: "space-evenly",
               borderRadius: 15,

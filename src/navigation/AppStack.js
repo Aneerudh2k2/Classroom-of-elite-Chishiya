@@ -18,37 +18,38 @@ import Fontisto from "react-native-vector-icons/Fontisto";
 const Tab = createBottomTabNavigator();
 
 const AppStack = ({ navigation }) => {
-  useEffect(() => {
-    async function localAuthPermission() {
-      Alert.alert(
-        "Secure Chishiya Security Shield with Screen lock!!",
-        "Protect your wallet account from unauthorised access by enabling it.",
-        [
-          {
-            text: "Enable now",
-            onPress: () => console.log("Enabled"),
-          },
-          {
-            text: "Skip",
-            onPress: () => console.log("Skipped"),
-          },
-        ]
-      );
-    }
-    // const result = getLocalAuth("isLocalAuthEnabled");
-    // console.log(result);
-    // if (result !== null && result === false) {
-    //   localAuthPermission();
-    // }
-  }, []);
+  // useEffect(() => {
+  //   async function localAuthPermission() {
+  //     Alert.alert(
+  //       "Secure Chishiya Security Shield with Screen lock!!",
+  //       "Protect your wallet account from unauthorised access by enabling it.",
+  //       [
+  //         {
+  //           text: "Enable now",
+  //           onPress: () => console.log("Enabled"),
+  //         },
+  //         {
+  //           text: "Skip",
+  //           onPress: () => console.log("Skipped"),
+  //         },
+  //       ]
+  //     );
+  //   }
+  //   // const result = getLocalAuth("isLocalAuthEnabled");
+  //   // console.log(result);
+  //   // if (result !== null && result === false) {
+  //   //   localAuthPermission();
+  //   // }
+  // }, []);
 
   const handleQR = () => {
     navigation.navigate("QR");
   };
+  const initialRouteName = "Wallet";
 
   return (
     <Tab.Navigator
-      initialRouteName="Wallet"
+      initialRouteName={initialRouteName}
       backBehavior="history"
       screenOptions={{
         tabBarAllowFontScaling: true,

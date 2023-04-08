@@ -15,7 +15,7 @@ const AuthStack = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        screenOptions={{ headerShown: false }}
+        screenOptions={{ headerShown: false, presentation: "modal" }}
         initialRouteName={initialRouteName}
       >
         {console.log(initialRouteName)}
