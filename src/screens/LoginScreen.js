@@ -49,7 +49,11 @@ const LoginScreen = ({ navigation }) => {
 
   useEffect(() => {
     const authenticate = async () => {
-      const result = await LocalAuth.authenticateAsync();
+      const result = await LocalAuth.authenticateAsync({
+        promptMessage: "Login to Chishiya",
+        cancelLabel: "Cancel",
+        requireConfirmation: true,
+      });
       if (!result.success) {
         console.log(result);
       } else {

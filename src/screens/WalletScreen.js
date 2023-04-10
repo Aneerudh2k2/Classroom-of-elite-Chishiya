@@ -625,7 +625,9 @@ const WalletScreen = ({ navigation }) => {
                 alignItems: "center",
               }}
               onPress={() => {
-                navigation.navigate("Transfer", { walletAddress });
+                navigation.navigate("Transfer", {
+                  walletAddress,
+                });
               }}
             >
               <Feather name={"send"} size={30} color={"purple"} />

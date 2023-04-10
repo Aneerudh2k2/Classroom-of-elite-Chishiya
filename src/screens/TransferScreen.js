@@ -10,15 +10,11 @@ import {
 import LottieView from "lottie-react-native";
 import React, { useState, useEffect } from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import * as Clipboard from "expo-clipboard";
 
 const TransferScreen = ({ navigation, route, ...props }) => {
   const [loading, setLoading] = useState(false);
   const [toValue, setToValue] = useState("");
-  const [wentToScan, setWentToScan] = useState(false);
-  const [walletAddress, setWalletAddress] = useState(
-    "0x64a7885CB27dc6C18096E97705C45C997d943240"
-  );
+  const [walletAddress, setWalletAddress] = useState("");
 
   const handleApi = async () => {
     try {
@@ -33,29 +29,36 @@ const TransferScreen = ({ navigation, route, ...props }) => {
       console.log(error);
     }
   };
+
   const handleQR = () => {
     navigation.navigate("QR");
   };
+
   const handleCancel = () => {
     setToValue("");
   };
+
   const handleSend = () => {
     navigation.navigate("MarketPlace");
   };
+
   useEffect(() => {
     handleApi();
-    console.log(route.params);
-    if (!route.params) {
-      console.log(route.params.data);
-      setWentToScan(true);
-    }
-
-    // setToValue(route.params.data.address);
   }, []);
 
-  const copyToClipboard = async (value) => {
-    await Clipboard.setStringAsync(value);
-  };
+  useEffect(() => {
+    console.log(route.params);
+    if (route.params && route.params.data) {
+      console.log("To value: ", route.params.data);
+      setToValue(route.params.data.address);
+    }
+
+    if (route.params && route.params.walletAddress) {
+      console.log("From Value: ", route.params.walletAddress);
+      setWalletAddress(route.params.walletAddress);
+    }
+  }, [route.params]);
+
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -198,7 +201,7 @@ const TransferScreen = ({ navigation, route, ...props }) => {
                   padding: 5,
                   // width: "90%",
                 }}
-                value={wentToScan ? route.params.data.address : ""}
+                value={toValue}
                 cursorColor={"#B619A7"}
               />
 
@@ -286,7 +289,11 @@ const TransferScreen = ({ navigation, route, ...props }) => {
 
       {/* Recents section */}
       <View style={{ flex: 0.6 }}>
-        <Text>Recents</Text>
+        <View style={{ flex: 0.15, marginBottom: 10 }}>
+          <Text style={{ fontSize: 16 }}>Recent address and transactions</Text>
+        </View>
+
+        <View></View>
       </View>
     </ScrollView>
   );

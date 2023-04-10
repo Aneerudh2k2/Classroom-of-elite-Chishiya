@@ -77,7 +77,7 @@ const OtpVerificationScreen = ({ navigation, route }) => {
   let code = [];
 
   useEffect(() => {
-    // code1Ref.current.focus();
+    code1Ref.current.focus();
   }, []);
 
   return (
