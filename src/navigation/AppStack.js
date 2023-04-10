@@ -10,7 +10,6 @@ import ProfileScreen from "../screens/ProfileScreen";
 
 // Icon imports
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Entypo from "react-native-vector-icons/Entypo";
 import Fontisto from "react-native-vector-icons/Fontisto";
 // import { getLocalAuth, setLocalAuth } from "../screens/LoginScreen";
@@ -42,9 +41,6 @@ const AppStack = ({ navigation }) => {
   //   // }
   // }, []);
 
-  const handleQR = () => {
-    navigation.navigate("QR");
-  };
   const initialRouteName = "Wallet";
 
   return (
@@ -60,7 +56,8 @@ const AppStack = ({ navigation }) => {
         },
         tabBarStyle: {
           // position: "absolute",
-          height: 62,
+          height: 65,
+          // height: 50,
           width: "88%",
           justifyContent: "center",
           alignSelf: "center",
@@ -72,7 +69,7 @@ const AppStack = ({ navigation }) => {
         tabBarLabelStyle: { fontSize: 11.5 },
         tabBarActiveTintColor: "#B619A7",
         tabBarInactiveTintColor: "#90708c",
-        tabBarHideOnKeyboard: true,
+        // tabBarHideOnKeyboard: true,
       }}
     >
       <Tab.Screen
@@ -110,15 +107,15 @@ const AppStack = ({ navigation }) => {
               />
             );
           },
-          headerRight: () => (
-            <TouchableOpacity onPress={handleQR}>
-              <MaterialCommunityIcons
-                name="qrcode-scan"
-                size={30}
-                color={"#B619A7"}
-              />
-            </TouchableOpacity>
-          ),
+          // headerRight: () => (
+          //   <TouchableOpacity onPress={handleQR}>
+          //     <MaterialCommunityIcons
+          //       name="qrcode-scan"
+          //       size={30}
+          //       color={"#B619A7"}
+          //     />
+          //   </TouchableOpacity>
+          // ),
         })}
       />
       <Tab.Screen

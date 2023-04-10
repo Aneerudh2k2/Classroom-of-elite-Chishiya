@@ -6,6 +6,8 @@ import {
   Animated,
   TouchableOpacity,
   ImageBackground,
+  ScrollView,
+  RefreshControl,
   Keyboard,
 } from "react-native";
 import React, { useRef, useState, useEffect } from "react";
@@ -23,6 +25,9 @@ const WalletScreen = ({ navigation }) => {
   const [copiedText, setCopiedText] = React.useState("");
   const [balance, setBalance] = React.useState((0.0).toPrecision(3));
   const [loading, setLoading] = useState(false);
+  const [walletAddress, setWalletAddress] = useState(
+    "0x64a7885CB27dc6C18096E97705C45C997d943240"
+  );
 
   const handleApi = async () => {
     try {
@@ -86,15 +91,16 @@ const WalletScreen = ({ navigation }) => {
 
   // const AnimatedImageBackground =
   //   Animated.createAnimatedComponent(ImageBackground);
-
-  const value = "0x64a7885CB27dc6C18096E97705C45C997d943240";
   return (
-    <View
-      style={{
+    <ScrollView
+      contentContainerStyle={{
         flex: 1,
-        justifyContent: "space-around",
+        justifyContent: "center",
         alignItems: "center",
       }}
+      refreshControl={
+        <RefreshControl refreshing={loading} onRefresh={handleApi} />
+      }
     >
       {console.log("Wallet screen")}
       {/* Card UI section */}
@@ -306,7 +312,7 @@ const WalletScreen = ({ navigation }) => {
                   fontWeight: 800,
                 }}
               >
-                JREX Token
+                JREX Coin
               </Text>
             </View>
 
@@ -333,7 +339,7 @@ const WalletScreen = ({ navigation }) => {
               >
                 <QRCode
                   value={JSON.stringify({
-                    address: "0x64a7885CB27dc6C18096E97705C45C997d943240",
+                    walletAddress,
                   })}
                   size={110}
                   // color="#B619A7"
@@ -382,7 +388,7 @@ const WalletScreen = ({ navigation }) => {
                     <TextInput
                       // onFocus={Keyboard.dismiss}
                       showSoftInputOnFocus={false}
-                      value={value}
+                      value={walletAddress}
                       style={{
                         height: 25,
                         width: "100%",
@@ -619,7 +625,7 @@ const WalletScreen = ({ navigation }) => {
                 alignItems: "center",
               }}
               onPress={() => {
-                navigation.navigate("Transfer");
+                navigation.navigate("Transfer", { walletAddress });
               }}
             >
               <Feather name={"send"} size={30} color={"purple"} />
@@ -652,7 +658,7 @@ const WalletScreen = ({ navigation }) => {
           /> */}
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

@@ -1,4 +1,4 @@
-import { View, Text, ActivityIndicator } from "react-native";
+import { View, Text, ScrollView, RefreshControl } from "react-native";
 import React, { useEffect, useState } from "react";
 import LottieView from "lottie-react-native";
 
@@ -12,7 +12,7 @@ const MarketPlaceScreen = ({ navigation }) => {
       result = await result.json();
       if (result.results.length !== 0) {
         console.log(result);
-        setLoading(true);
+        setLoading(false);
       }
     } catch (error) {
       console.log(error);
@@ -57,9 +57,18 @@ const MarketPlaceScreen = ({ navigation }) => {
   }
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+    <ScrollView
+      contentContainerStyle={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+      refreshControl={
+        <RefreshControl refreshing={loading} onRefresh={handleApi} />
+      }
+    >
       <Text>MarketPlaceScreen</Text>
-    </View>
+    </ScrollView>
   );
 };
 

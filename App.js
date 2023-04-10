@@ -11,6 +11,11 @@ const App = () => {
   );
 };
 
+// #E6AACE
+// #B619A7
+// #ad40af
+// #90708c
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

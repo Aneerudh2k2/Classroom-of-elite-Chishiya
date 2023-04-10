@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet, Button } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 
-export default function QRCodeScanner() {
+export default function QRCodeScanner({ navigation }) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [text, setText] = useState("Not yet scanned");
@@ -24,6 +24,12 @@ export default function QRCodeScanner() {
     setScanned(true);
     setText(data);
     console.log("Type: " + type + "\nData: " + data);
+    navigation.navigate("App", {
+      screen: "Transfer",
+      params: {
+        data: JSON.parse(data),
+      },
+    });
   };
 
   // Check permissions and return the screens
