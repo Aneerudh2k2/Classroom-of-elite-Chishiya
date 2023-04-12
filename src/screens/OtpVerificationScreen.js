@@ -43,7 +43,7 @@ const NavBar = ({ navigation, route }) => {
           alignItems: "center",
         }}
       >
-        <Text style={{ fontSize: 20 }}>OTP</Text>
+        <Text style={{ fontSize: 20, fontFamily: "Montserrat" }}>OTP</Text>
       </View>
     </View>
   );
@@ -108,13 +108,21 @@ const OtpVerificationScreen = ({ navigation, route }) => {
             // backgroundColor: "#AD40AF",
           }}
         >
-          <Text style={{ fontSize: 25, fontWeight: 600 }}>
+          <Text
+            style={{ fontSize: 25, fontWeight: 600, fontFamily: "Montserrat" }}
+          >
             Verification Code
           </Text>
-          <Text stye={{ fontSize: 15 }}>
+          <Text stye={{ fontSize: 15, fontFamily: "Montserrat" }}>
             We have sent OTP to your Email address
           </Text>
-          <Text style={{ fontWeight: 600, color: "#AD40AF" }}>
+          <Text
+            style={{
+              fontWeight: 600,
+              color: "#AD40AF",
+              fontFamily: "Montserrat",
+            }}
+          >
             {route.params.email}
           </Text>
         </View>

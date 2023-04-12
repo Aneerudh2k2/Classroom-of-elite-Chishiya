@@ -116,7 +116,11 @@ const WalletScreen = ({ navigation }) => {
         }}
       >
         <View style={{ flex: 0.125, marginLeft: 15 }}>
-          <Text style={{ fontSize: 20, color: "#B619A7" }}>Wallet Details</Text>
+          <Text
+            style={{ fontSize: 20, color: "#B619A7", fontFamily: "Montserrat" }}
+          >
+            Wallet Details
+          </Text>
         </View>
 
         <TouchableOpacity
@@ -171,6 +175,7 @@ const WalletScreen = ({ navigation }) => {
                   color: "#f5e5fc",
                   fontSize: 14,
                   fontWeight: 800,
+                  fontFamily: "Montserrat",
                 }}
               >
                 JREX Coin
@@ -235,12 +240,22 @@ const WalletScreen = ({ navigation }) => {
                 }}
               >
                 <Text
-                  style={{ fontSize: 20, fontWeight: "900", color: "#fff" }}
+                  style={{
+                    fontSize: 20,
+                    fontWeight: "900",
+                    color: "#fff",
+                    fontFamily: "Montserrat",
+                  }}
                 >
                   Chishiya
                 </Text>
                 <Text
-                  style={{ fontSize: 12.5, fontWeight: "100", color: "#fff" }}
+                  style={{
+                    fontSize: 12.5,
+                    fontWeight: "100",
+                    color: "#fff",
+                    fontFamily: "Montserrat",
+                  }}
                 >
                   Satoshi Nakamoto
                 </Text>
@@ -252,7 +267,12 @@ const WalletScreen = ({ navigation }) => {
               >
                 <View>
                   <Text
-                    style={{ fontSize: 12.5, color: "#fff", fontWeight: "100" }}
+                    style={{
+                      fontSize: 12.5,
+                      color: "#fff",
+                      fontWeight: "100",
+                      fontFamily: "Montserrat",
+                    }}
                   >
                     Tap for wallet details{" "}
                   </Text>
@@ -358,7 +378,13 @@ const WalletScreen = ({ navigation }) => {
                   width: "100%",
                 }}
               >
-                <Text style={{ fontSize: 15, color: "#fff" }}>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    color: "#fff",
+                    fontFamily: "Montserrat",
+                  }}
+                >
                   Wallet Address
                 </Text>
 
@@ -419,7 +445,12 @@ const WalletScreen = ({ navigation }) => {
             <View style={{ flex: 0.1, flexDirection: "row", paddingBottom: 5 }}>
               <View>
                 <Text
-                  style={{ fontSize: 12.5, color: "#fff", fontWeight: "100" }}
+                  style={{
+                    fontSize: 12.5,
+                    color: "#fff",
+                    fontWeight: "100",
+                    fontFamily: "Montserrat",
+                  }}
                 >
                   Tap for wallet card{" "}
                 </Text>
@@ -486,7 +517,9 @@ const WalletScreen = ({ navigation }) => {
         }}
       >
         <View style={{ flex: 0.15, marginLeft: 15, alignItems: "center" }}>
-          <Text style={{ fontSize: 22, color: "#B619A7" }}>
+          <Text
+            style={{ fontSize: 22, color: "#B619A7", fontFamily: "Montserrat" }}
+          >
             Balance and History
           </Text>
         </View>
@@ -536,7 +569,12 @@ const WalletScreen = ({ navigation }) => {
                 }}
               >
                 <Text
-                  style={{ fontSize: 15, color: "#fff", fontWeight: "600" }}
+                  style={{
+                    fontSize: 15,
+                    color: "#fff",
+                    fontWeight: "600",
+                    fontFamily: "Montserrat",
+                  }}
                 >
                   Balance
                 </Text>
@@ -554,6 +592,7 @@ const WalletScreen = ({ navigation }) => {
                   style={{
                     fontSize: 27,
                     color: "#AD40AF",
+                    // fontFamily: "Montserrat",
                   }}
                 >
                   JREX {balance}
@@ -610,7 +649,15 @@ const WalletScreen = ({ navigation }) => {
                 size={30}
                 color={"purple"}
               />
-              <Text style={{ fontSize: 11, color: "#AD40AF" }}>TopUp</Text>
+              <Text
+                style={{
+                  fontSize: 11,
+                  color: "#AD40AF",
+                  fontFamily: "Montserrat",
+                }}
+              >
+                TopUp
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -631,7 +678,15 @@ const WalletScreen = ({ navigation }) => {
               }}
             >
               <Feather name={"send"} size={30} color={"purple"} />
-              <Text style={{ fontSize: 11, color: "#AD40AF" }}>Send</Text>
+              <Text
+                style={{
+                  fontSize: 11,
+                  color: "#AD40AF",
+                  fontFamily: "Montserrat",
+                }}
+              >
+                Send
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -651,7 +706,15 @@ const WalletScreen = ({ navigation }) => {
                 size={30}
                 color={"purple"}
               />
-              <Text style={{ fontSize: 11, color: "#AD40AF" }}>History</Text>
+              <Text
+                style={{
+                  fontSize: 11,
+                  color: "#AD40AF",
+                  fontFamily: "Montserrat",
+                }}
+              >
+                History
+              </Text>
             </TouchableOpacity>
           </View>
           {/* <Image

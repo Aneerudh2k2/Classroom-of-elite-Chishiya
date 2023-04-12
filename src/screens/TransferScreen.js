@@ -49,8 +49,8 @@ const TransferScreen = ({ navigation, route }) => {
     },
     {
       id: 2,
-      username: "Nishok",
-      "transactedAmount(in JREX)": 5.23,
+      username: "Anee",
+      "transactedAmount(in JREX)": -5.23,
       date: new Date().toLocaleDateString(),
       "gasFee (in ETH)": 0.00005454,
       txnHash:
@@ -229,25 +229,6 @@ const TransferScreen = ({ navigation, route }) => {
   };
 
   const Transaction = ({ item, index }) => {
-    {
-      /*chatgpt 1st generate*/
-    }
-    // const isExpanded = item.id === expandedId;
-    // const animation =
-    //   txnListHeightAnimatedValue.current[item.id] || new Animated.Value(0);
-    // const heightInterpolation = animation.interpolate({
-    //   inputRange: [0, 1],
-    //   outputRange: [0, 150],
-    // });
-
-    {
-      /**chatgpt 2nd generate */
-    }
-    // const heightInterpolation = txnListHeightAnimatedValue.current.interpolate({
-    //   inputRange: [item.id - 1, item.id],
-    //   outputRange: [0, 150],
-    // });
-
     const isExpanded = item.id === expandedId;
     const heightInterpolation = txnListHeightAnimatedValue.interpolate({
       inputRange: [0, 1],
@@ -276,8 +257,8 @@ const TransferScreen = ({ navigation, route }) => {
         >
           {/* Username */}
           <View style={{ flex: 0.4, flexDirection: "row" }}>
-            <Text>{item.username}</Text>
-            <Text>
+            <Text style={{ fontFamily: "Montserrat" }}>{item.username}</Text>
+            <Text style={{ fontFamily: "Montserrat", fontSize: 13 }}>
               {" "}
               (
               {item.receiverWalletAddress.substring(0, 5) +
@@ -291,8 +272,17 @@ const TransferScreen = ({ navigation, route }) => {
 
           {/* Currency token part */}
           <View style={{ flex: 0.6, alignItems: "flex-end" }}>
-            <Text style={{ color: "#10b881" }}>
-              +{item["transactedAmount(in JREX)"]} JREX
+            <Text
+              style={{
+                color:
+                  item["transactedAmount(in JREX)"] < 0 ? "red" : "#10b881",
+                fontFamily: "Montserrat",
+              }}
+            >
+              {`${item["transactedAmount(in JREX)"] < 0 ? "" : "+"} ${
+                item["transactedAmount(in JREX)"]
+              }`}{" "}
+              JREX
             </Text>
           </View>
         </View>
@@ -328,7 +318,9 @@ const TransferScreen = ({ navigation, route }) => {
                 alignItems: "center",
               }}
             >
-              <Text style={{ color: "grey" }}>{item.date}</Text>
+              <Text style={{ color: "grey", fontFamily: "Montserrat" }}>
+                {item.date}
+              </Text>
             </View>
           </View>
 
@@ -344,7 +336,15 @@ const TransferScreen = ({ navigation, route }) => {
                 handleTxnDetailPress(item.id);
               }}
             >
-              <Text style={{ color: "grey", fontSize: 12 }}>Txn details</Text>
+              <Text
+                style={{
+                  color: "grey",
+                  fontSize: 12,
+                  fontFamily: "Montserrat",
+                }}
+              >
+                Txn details
+              </Text>
               <>
                 {isExpanded ? (
                   <AntDesign name="up" size={15} color="grey" />
@@ -382,7 +382,13 @@ const TransferScreen = ({ navigation, route }) => {
                     width: 16,
                   }}
                 />
-                <Text style={{ fontSize: 12, color: "grey" }}>
+                <Text
+                  style={{
+                    fontSize: 12,
+                    color: "grey",
+                    fontFamily: "Montserrat",
+                  }}
+                >
                   {"  "}Fee {item["gasFee (in ETH)"]} ETH
                 </Text>
               </View>
@@ -393,10 +399,22 @@ const TransferScreen = ({ navigation, route }) => {
               >
                 {/* hash part */}
                 <View style={{ flex: 0.5, margin: 3 }}>
-                  <Text style={{ fontSize: 12, color: "grey" }}>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      color: "grey",
+                      fontFamily: "Montserrat",
+                    }}
+                  >
                     Transaction Hash
                   </Text>
-                  <Text style={{ fontSize: 12, color: "skyblue" }}>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      color: "skyblue",
+                      fontFamily: "Montserrat",
+                    }}
+                  >
                     {item.txnHash.substring(0, 6) +
                       "........" +
                       item.txnHash.substring(item.txnHash.length - 7)}
@@ -404,7 +422,13 @@ const TransferScreen = ({ navigation, route }) => {
                 </View>
                 {/* // walleAddress part */}
                 <View style={{ flex: 0.5, margin: 3 }}>
-                  <Text style={{ fontSize: 12, color: "grey" }}>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      color: "grey",
+                      fontFamily: "Montserrat",
+                    }}
+                  >
                     Wallet Address
                   </Text>
 
@@ -418,7 +442,13 @@ const TransferScreen = ({ navigation, route }) => {
                       );
                     }}
                   >
-                    <Text style={{ fontSize: 12, color: "skyblue" }}>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        color: "skyblue",
+                        fontFamily: "Montserrat",
+                      }}
+                    >
                       {item.receiverWalletAddress.substring(0, 5) +
                         "........" +
                         item.receiverWalletAddress.substring(
@@ -475,7 +505,15 @@ const TransferScreen = ({ navigation, route }) => {
         >
           {/* Input section */}
           <View style={{ flex: 1 }}>
-            <Text style={{ fontSize: 22, alignSelf: "center" }}>Send To</Text>
+            <Text
+              style={{
+                fontSize: 22,
+                alignSelf: "center",
+                fontFamily: "Montserrat",
+              }}
+            >
+              Send To
+            </Text>
             {/* From section */}
             <View
               style={{
@@ -490,7 +528,15 @@ const TransferScreen = ({ navigation, route }) => {
               }}
             >
               <View style={{ flex: 0.2, alignItems: "center" }}>
-                <Text style={{ fontSize: 18, color: "#90708c" }}>From:</Text>
+                <Text
+                  style={{
+                    fontSize: 18,
+                    color: "#90708c",
+                    fontFamily: "Montserrat",
+                  }}
+                >
+                  From:
+                </Text>
               </View>
               <View
                 style={{
@@ -560,7 +606,15 @@ const TransferScreen = ({ navigation, route }) => {
                 }}
               >
                 <View style={{ flex: 0.2, alignItems: "center" }}>
-                  <Text style={{ fontSize: 18, color: "#90708c" }}>To:</Text>
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      color: "#90708c",
+                      fontFamily: "Montserrat",
+                    }}
+                  >
+                    To:
+                  </Text>
                 </View>
 
                 <View
@@ -642,6 +696,7 @@ const TransferScreen = ({ navigation, route }) => {
                       fontWeight: "700",
                       fontSize: 16,
                       color: "#AD40AF",
+                      fontFamily: "Montserrat",
                     }}
                   >
                     Cancel
@@ -666,6 +721,7 @@ const TransferScreen = ({ navigation, route }) => {
                       fontWeight: "700",
                       fontSize: 16,
                       color: "#fff",
+                      fontFamily: "Montserrat",
                     }}
                   >
                     Send
@@ -680,7 +736,9 @@ const TransferScreen = ({ navigation, route }) => {
       {/* Recents section */}
       <View style={{ flex: 0.6, margin: 17 }}>
         <View style={{ flex: 0.125, marginBottom: 5 }}>
-          <Text style={{ fontSize: 16 }}>Recent address and transactions</Text>
+          <Text style={{ fontSize: 16, fontFamily: "Montserrat" }}>
+            Recent address and transactions
+          </Text>
         </View>
 
         {/* transaction List part */}

@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -15,6 +14,10 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import CustomButton from "../components/CustomButton";
 import * as LocalAuth from "expo-local-authentication";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
 
 // import LoginSVG from "../assets/images/login.svg";
 // import GoogleSVG from "../assets/images/google.svg";
@@ -64,6 +67,20 @@ const LoginScreen = ({ navigation }) => {
     authenticate();
   }, []);
 
+  const [fontsLoaded] = useFonts({
+    Montserrat: require("../assets/fonts/Montserrat-Regular.ttf"),
+  });
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
     <>
       <StatusBar
@@ -74,7 +91,10 @@ const LoginScreen = ({ navigation }) => {
         showHideTransition="fade"
         hidden={false}
       />
-      <View style={{ flex: 1, justifyContent: "center" }}>
+      <View
+        style={{ flex: 1, justifyContent: "center" }}
+        onLayout={onLayoutRootView}
+      >
         {/* {isAuthenticated ? ( */}
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -90,7 +110,7 @@ const LoginScreen = ({ navigation }) => {
 
           <Text
             style={{
-              // fontFamily: "Roboto-Medium",
+              fontFamily: "Montserrat",
               fontSize: 28,
               fontWeight: "500",
               color: "#333",
@@ -183,7 +203,12 @@ const LoginScreen = ({ navigation }) => {
             }}
           />
           <Text
-            style={{ textAlign: "center", color: "#666", marginBottom: 30 }}
+            style={{
+              textAlign: "center",
+              color: "#666",
+              marginBottom: 30,
+              fontFamily: "Montserrat",
+            }}
           >
             Or, login with ...
           </Text>
@@ -239,9 +264,15 @@ const LoginScreen = ({ navigation }) => {
               marginBottom: 30,
             }}
           >
-            <Text>New to the app?</Text>
+            <Text style={{ fontFamily: "Montserrat" }}>New to the app?</Text>
             <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-              <Text style={{ color: "#AD40AF", fontWeight: "700" }}>
+              <Text
+                style={{
+                  color: "#AD40AF",
+                  fontWeight: "700",
+                  fontFamily: "Montserrat",
+                }}
+              >
                 {" "}
                 Register
               </Text>

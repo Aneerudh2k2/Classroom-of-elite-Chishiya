@@ -42,6 +42,7 @@ const RegisterScreen = ({ navigation }) => {
         <Text
           style={{
             // fontFamily: "Roboto-Medium",
+            fontFamily: "Montserrat",
             fontSize: 28,
             fontWeight: "500",
             color: "#333",
@@ -167,7 +168,14 @@ const RegisterScreen = ({ navigation }) => {
             style={{ marginRight: 5 }}
           />
           <TouchableOpacity onPress={() => setOpen(true)}>
-            <Text style={{ color: "#666", marginLeft: 5, marginTop: 5 }}>
+            <Text
+              style={{
+                color: "#666",
+                marginLeft: 5,
+                marginTop: 5,
+                fontFamily: "Montserrat",
+              }}
+            >
               {dobLabel}
             </Text>
           </TouchableOpacity>
@@ -199,9 +207,18 @@ const RegisterScreen = ({ navigation }) => {
             marginBottom: 30,
           }}
         >
-          <Text>Already registered?</Text>
+          <Text style={{ fontFamily: "Montserrat" }}>Already registered?</Text>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Text style={{ color: "#AD40AF", fontWeight: "700" }}> Login</Text>
+            <Text
+              style={{
+                color: "#AD40AF",
+                fontWeight: "700",
+                fontFamily: "Montserrat",
+              }}
+            >
+              {" "}
+              Login
+            </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

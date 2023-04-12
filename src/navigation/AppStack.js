@@ -12,6 +12,7 @@ import ProfileScreen from "../screens/ProfileScreen";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Entypo from "react-native-vector-icons/Entypo";
 import Fontisto from "react-native-vector-icons/Fontisto";
+import AntDesign from "react-native-vector-icons/AntDesign";
 // import { getLocalAuth, setLocalAuth } from "../screens/LoginScreen";
 
 const Tab = createBottomTabNavigator();
@@ -79,6 +80,7 @@ const AppStack = ({ navigation }) => {
           title: "Wallet",
           headerTitleAlign: "center",
           headerTitleStyle: { fontSize: 17, fontWeight: 600 },
+          headerRightContainerStyle: { paddingRight: 15 },
           tabBarIcon: ({ focused, color, size }) => {
             return (
               <Fontisto
@@ -88,6 +90,15 @@ const AppStack = ({ navigation }) => {
               />
             );
           },
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("Login");
+              }}
+            >
+              <AntDesign name="logout" size={30} color={"#B619A7"} />
+            </TouchableOpacity>
+          ),
         })}
       />
       <Tab.Screen
@@ -107,15 +118,15 @@ const AppStack = ({ navigation }) => {
               />
             );
           },
-          // headerRight: () => (
-          //   <TouchableOpacity onPress={handleQR}>
-          //     <MaterialCommunityIcons
-          //       name="qrcode-scan"
-          //       size={30}
-          //       color={"#B619A7"}
-          //     />
-          //   </TouchableOpacity>
-          // ),
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("Login");
+              }}
+            >
+              <AntDesign name="logout" size={30} color={"#B619A7"} />
+            </TouchableOpacity>
+          ),
         })}
       />
       <Tab.Screen
@@ -125,6 +136,7 @@ const AppStack = ({ navigation }) => {
           headerTitle: "Rewards & Shopping",
           title: "Marketplace",
           headerTitleAlign: "center",
+          headerRightContainerStyle: { paddingRight: 15 },
           headerTitleStyle: { fontSize: 17, fontWeight: 600 },
           tabBarIcon: ({ focused, color, size }) => {
             return (
@@ -135,14 +147,24 @@ const AppStack = ({ navigation }) => {
               />
             );
           },
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("Login");
+              }}
+            >
+              <AntDesign name="logout" size={30} color={"#B619A7"} />
+            </TouchableOpacity>
+          ),
         })}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Profile"
         component={ProfileScreen}
         options={({ navigation }) => ({
           title: "Account",
           headerTitleAlign: "center",
+          headerRightContainerStyle: { paddingRight: 15 },
           headerTitleStyle: { fontSize: 17, fontWeight: 600 },
           tabBarIcon: ({ focused, color, size }) => {
             return (
@@ -154,7 +176,7 @@ const AppStack = ({ navigation }) => {
             );
           },
         })}
-      />
+      /> */}
     </Tab.Navigator>
   );
 };
