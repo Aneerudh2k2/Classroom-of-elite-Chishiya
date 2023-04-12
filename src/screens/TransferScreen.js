@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
+  Alert,
 } from "react-native";
 import LottieView from "lottie-react-native";
 import React, { useState, useEffect, useRef } from "react";
@@ -21,7 +22,6 @@ const TransferScreen = ({ navigation, route }) => {
   const [loading, setLoading] = useState(false);
   const [toValue, setToValue] = useState("");
   const [walletAddress, setWalletAddress] = useState("");
-  const [showMoreToggle, setShowMoreToggle] = useState(false);
   const [expandedId, setExpandedId] = useState(null);
   const [transactionData, settransactionData] = useState([
     {
@@ -148,6 +148,7 @@ const TransferScreen = ({ navigation, route }) => {
         // console.log(result);
         setLoading(false);
       }
+      setWalletAddress("0x9f4Cf329f4cF376B7ADED854D6054859dd102a2A");
     } catch (error) {
       console.log(error);
     }
@@ -209,30 +210,22 @@ const TransferScreen = ({ navigation, route }) => {
   }
 
   const handleTxnDetailPress = (id) => {
-    // console.log(id);
-    // setExpandedId(id);
-    // if (txnListHeightAnimatedValue.current[id]) {
-    //   Animated.timing(txnListHeightAnimatedValue.current[id], {
-    //     toValue: 0,
-    //     duration: 300,
-    //     useNativeDriver: false,
-    //   }).start(() => {
-    //     delete txnListHeightAnimatedValue.current[id];
-    //   });
-    // } else {
-    //   const animation = new Animated.Value(0);
-    //   txnListHeightAnimatedValue.current[id] = animation;
-    //   Animated.timing(animation, {
-    //     toValue: 1,
-    //     duration: 300,
-    //     useNativeDriver: false,
-    //   }).start();
-    // }
-    Animated.timing(txnListHeightAnimatedValue.current, {
-      toValue: id,
-      duration: 300,
-      useNativeDriver: false,
-    }).start();
+    // setShowMoreToggle(!showMoreToggle);
+    if (expandedId === id) {
+      setExpandedId(null);
+      Animated.timing(txnListHeightAnimatedValue, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: false,
+      }).start();
+    } else {
+      setExpandedId(id);
+      Animated.timing(txnListHeightAnimatedValue, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: false,
+      }).start();
+    }
   };
 
   const Transaction = ({ item, index }) => {
@@ -255,9 +248,10 @@ const TransferScreen = ({ navigation, route }) => {
     //   outputRange: [0, 150],
     // });
 
+    const isExpanded = item.id === expandedId;
     const heightInterpolation = txnListHeightAnimatedValue.interpolate({
       inputRange: [0, 1],
-      outputRange: [0, 145],
+      outputRange: [0, 140],
     });
 
     return (
@@ -347,21 +341,12 @@ const TransferScreen = ({ navigation, route }) => {
                 flexDirection: "row",
               }}
               onPress={() => {
-                setExpandedId(item.id);
-                // flatListRef.current.scrollToIndex({ index: item.id - 1 });
-                setShowMoreToggle(!showMoreToggle);
-                Animated.timing(txnListHeightAnimatedValue, {
-                  toValue: showMoreToggle ? 0 : 1,
-                  duration: 200,
-                  useNativeDriver: false,
-                }).start();
-                // setShowMoreToggle(!showMoreToggle);
-                // handleTxnDetailPress(item.id);
+                handleTxnDetailPress(item.id);
               }}
             >
               <Text style={{ color: "grey", fontSize: 12 }}>Txn details</Text>
               <>
-                {showMoreToggle ? (
+                {isExpanded ? (
                   <AntDesign name="up" size={15} color="grey" />
                 ) : (
                   <AntDesign name="down" size={15} color="grey" />
@@ -377,72 +362,80 @@ const TransferScreen = ({ navigation, route }) => {
             height: heightInterpolation,
             marginHorizontal: 10,
             marginVertical: 5,
-            display: showMoreToggle ? "flex" : "none",
+            display: isExpanded ? "flex" : "none",
           }}
         >
-          {/* Gas fee section*/}
-          <View
-            style={{
-              flex: 0.2,
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <Image
-              source={require("../assets/images/gas_fee.png")}
-              style={{
-                height: 16,
-                width: 16,
-              }}
-            />
-            <Text style={{ fontSize: 12, color: "grey" }}>
-              {"  "}Fee {item["gasFee (in ETH)"]} ETH
-            </Text>
-          </View>
-
-          {/* hash and address part  */}
-          <View style={{ flex: 0.8, width: "80%", justifyContent: "center" }}>
-            {/* hash part */}
-            <View style={{ flex: 0.5, margin: 3 }}>
-              <Text style={{ fontSize: 12, color: "grey" }}>
-                Transaction Hash
-              </Text>
-              <Text style={{ fontSize: 12, color: "skyblue" }}>
-                {item.txnHash.substring(0, 6) +
-                  "........" +
-                  item.txnHash.substring(item.txnHash.length - 7)}
-              </Text>
-            </View>
-
-            {/* walleAddress part */}
-            <View style={{ flex: 0.5, margin: 3 }}>
-              <Text style={{ fontSize: 12, color: "grey" }}>
-                Wallet Address
-              </Text>
-
-              <TouchableOpacity
-                style={{ flexDirection: "row" }}
-                onPress={() => {
-                  copyToClipboard(item.receiverWalletAddress);
-                  alert("Copied");
+          {isExpanded && (
+            <View style={{ flex: 1 }}>
+              {/* // Gas fee section */}
+              <View
+                style={{
+                  flex: 0.2,
+                  flexDirection: "row",
+                  alignItems: "center",
                 }}
               >
-                <Text style={{ fontSize: 12, color: "skyblue" }}>
-                  {item.receiverWalletAddress.substring(0, 5) +
-                    "........" +
-                    item.receiverWalletAddress.substring(
-                      item.receiverWalletAddress.length - 5
-                    )}
-                  {"  "}
-                </Text>
-                <MaterialCommunityIcons
-                  name={"content-copy"}
-                  size={16}
-                  color={"grey"}
+                <Image
+                  source={require("../assets/images/gas_fee.png")}
+                  style={{
+                    height: 16,
+                    width: 16,
+                  }}
                 />
-              </TouchableOpacity>
+                <Text style={{ fontSize: 12, color: "grey" }}>
+                  {"  "}Fee {item["gasFee (in ETH)"]} ETH
+                </Text>
+              </View>
+
+              {/* //hash and address part */}
+              <View
+                style={{ flex: 0.8, width: "80%", justifyContent: "center" }}
+              >
+                {/* hash part */}
+                <View style={{ flex: 0.5, margin: 3 }}>
+                  <Text style={{ fontSize: 12, color: "grey" }}>
+                    Transaction Hash
+                  </Text>
+                  <Text style={{ fontSize: 12, color: "skyblue" }}>
+                    {item.txnHash.substring(0, 6) +
+                      "........" +
+                      item.txnHash.substring(item.txnHash.length - 7)}
+                  </Text>
+                </View>
+                {/* // walleAddress part */}
+                <View style={{ flex: 0.5, margin: 3 }}>
+                  <Text style={{ fontSize: 12, color: "grey" }}>
+                    Wallet Address
+                  </Text>
+
+                  <TouchableOpacity
+                    style={{ flexDirection: "row" }}
+                    onPress={() => {
+                      copyToClipboard(item.receiverWalletAddress);
+                      Alert.alert(
+                        "Info!",
+                        `${item.username}'s wallet addres copied`
+                      );
+                    }}
+                  >
+                    <Text style={{ fontSize: 12, color: "skyblue" }}>
+                      {item.receiverWalletAddress.substring(0, 5) +
+                        "........" +
+                        item.receiverWalletAddress.substring(
+                          item.receiverWalletAddress.length - 5
+                        )}
+                      {"  "}
+                    </Text>
+                    <MaterialCommunityIcons
+                      name={"content-copy"}
+                      size={16}
+                      color={"grey"}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
             </View>
-          </View>
+          )}
         </Animated.View>
       </View>
     );
