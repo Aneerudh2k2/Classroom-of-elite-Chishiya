@@ -74,7 +74,7 @@ const WalletScreen = ({ navigation }) => {
 
     Animated.timing(flipAnimation, {
       toValue: isFlipped ? 0 : 180,
-      duration: 500,
+      duration: 300,
       useNativeDriver: false,
     }).start();
   };
@@ -402,7 +402,7 @@ const WalletScreen = ({ navigation }) => {
                   <TouchableOpacity
                     style={{ justifyContent: "flex-end" }}
                     onPress={() => {
-                      copyToClipboard(value);
+                      copyToClipboard(walletAddress);
                       alert("Copied");
                     }}
                   >
