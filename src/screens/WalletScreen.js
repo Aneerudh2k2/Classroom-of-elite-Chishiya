@@ -23,7 +23,7 @@ const WalletScreen = ({ navigation }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const qrRef = useRef();
   const [copiedText, setCopiedText] = React.useState("");
-  const [balance, setBalance] = React.useState((0.0).toPrecision(3));
+  const [balance, setBalance] = React.useState(79.98);
   const [loading, setLoading] = useState(false);
   const [walletAddress, setWalletAddress] = useState(
     "0x64a7885CB27dc6C18096E97705C45C997d943240"
@@ -35,7 +35,7 @@ const WalletScreen = ({ navigation }) => {
       let result = await fetch("https://randomuser.me/api?results=150");
       result = await result.json();
       if (result.results.length !== 0) {
-        console.log(result);
+        // console.log(result);
         setLoading(false);
       }
     } catch (error) {

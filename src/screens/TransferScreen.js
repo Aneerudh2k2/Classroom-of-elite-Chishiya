@@ -19,6 +19,7 @@ import * as Clipboard from "expo-clipboard";
 const TransferScreen = ({ navigation, route }) => {
   const txnListHeightAnimatedValue = useRef(new Animated.Value(0)).current;
   // const txnListHeightAnimatedValue = useRef({});
+  const [amount, setAmount] = useState(0.0);
   const [loading, setLoading] = useState(false);
   const [toValue, setToValue] = useState("");
   const [walletAddress, setWalletAddress] = useState("");
@@ -163,7 +164,11 @@ const TransferScreen = ({ navigation, route }) => {
   };
 
   const handleSend = () => {
-    navigation.navigate("MarketPlace");
+    // navigation.navigate("MarketPlace");
+    Alert.alert(
+      "Transaction Summary!",
+      `From ${walletAddress}\n To ${toValue}\n Amount ${amount}\n sent successful`
+    );
   };
 
   useEffect(() => {
@@ -491,7 +496,7 @@ const TransferScreen = ({ navigation, route }) => {
   return (
     <View style={{ flex: 1, margin: 10 }}>
       {/* Input section container */}
-      <View style={{ flex: 0.4, margin: 17 }}>
+      <View style={{ flex: 0.5, margin: 17 }}>
         <ScrollView
           contentContainerStyle={{
             flex: 1,
@@ -669,6 +674,79 @@ const TransferScreen = ({ navigation, route }) => {
               {/* to section buttons part */}
               <View
                 style={{
+                  flex: 0.3,
+                  margin: 2,
+                  // borderWidth: 0.5,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  paddingHorizontal: 8,
+                  height: "100%",
+                }}
+              >
+                <View style={{ flex: 0.2, alignItems: "center" }}>
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      color: "#90708c",
+                      fontFamily: "Montserrat",
+                    }}
+                  >
+                    Amount:
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    flex: 0.8,
+                    borderWidth: 0.5,
+                    borderRadius: 10,
+                    borderColor: "#B619A7",
+                    flexDirection: "row",
+                    justifyContent: "space-around",
+                    paddingVertical: 5,
+                    // alignItems: "center",
+                  }}
+                >
+                  <TextInput
+                    placeholder={"Enter Amount here"}
+                    placeholderTextColor={"#E6AACE"}
+                    style={{
+                      height: "100%",
+                      fontSize: 15,
+                      // borderWidth: 0.5,
+                      padding: 5,
+                      width: "100%",
+                    }}
+                    value={amount}
+                    onChangeText={(values) => {
+                      setAmount(values);
+                    }}
+                    cursorColor={"#B619A7"}
+                    clearButtonMode={"always"}
+                  />
+
+                  {/* <TouchableOpacity
+              style={{
+                flex: 0.2,
+                // borderWidth: 0.5,
+                padding: 5,
+                marginRight: 5,
+                alignItems: "flex-end",
+              }}
+              onPress={handleQR}
+              >
+              <MaterialCommunityIcons
+              name="qrcode-scan"
+              size={25}
+                color={"#B619A7"}
+                />
+            </TouchableOpacity> */}
+                </View>
+              </View>
+
+              {/*  section */}
+              <View
+                style={{
                   flex: 0.5,
                   flexDirection: "row",
                   // borderWidth: 0.5,
@@ -734,7 +812,7 @@ const TransferScreen = ({ navigation, route }) => {
       </View>
 
       {/* Recents section */}
-      <View style={{ flex: 0.6, margin: 17 }}>
+      <View style={{ flex: 0.5, margin: 17 }}>
         <View style={{ flex: 0.125, marginBottom: 5 }}>
           <Text style={{ fontSize: 16, fontFamily: "Montserrat" }}>
             Recent address and transactions
