@@ -5,10 +5,13 @@ import {
   Image,
   TextInput,
   ScrollView,
+  ActivityIndicator,
+  Alert,
 } from "react-native";
 import React, { useState, useEffect, useRef } from "react";
 import CustomButton from "../components/CustomButton";
 import AntDesign from "react-native-vector-icons/AntDesign";
+import * as SecureStore from "expo-secure-store";
 
 const NavBar = ({ navigation, route }) => {
   return (
@@ -26,7 +29,7 @@ const NavBar = ({ navigation, route }) => {
     >
       <TouchableOpacity
         style={{ margin: 3, paddingLeft: 15, width: 45, flex: 0.1 }}
-        onPress={() => navigation.navigate("Login")}
+        onPress={() => navigation.goBack()}
       >
         <AntDesign
           name="arrowleft"
@@ -75,10 +78,76 @@ const OtpVerificationScreen = ({ navigation, route }) => {
   const code5Ref = useRef();
   const code6Ref = useRef();
   let code = [];
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     code1Ref.current.focus();
   }, []);
+
+  const handleVerification = async () => {
+    try {
+      setLoading(true);
+      console.log({ code, signinup: route.params.signinup });
+
+      let verifyOTP = await fetch(`http://192.168.43.99:3000/verifyOTP`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: route.params.signinup.from,
+          OTP: code,
+          name: route.params.signinup.name,
+          email: route.params.signinup.email,
+          OTPresult: route.params.signinup.OTPresult,
+          token: route.params.signinup.token,
+          walletDetails: route.params.signinup.walletDetails,
+        }),
+        mode: "cors",
+        credentials: "same-origin",
+      });
+
+      verifyOTP = await verifyOTP.json();
+
+      if (!verifyOTP.success) {
+        setLoading(false);
+        throw new Error(verifyOTP.error);
+      }
+
+      // save the auth token to secure store
+      await SecureStore.setItemAsync(
+        "token",
+        route.params.signinup.from === "Login"
+          ? verifyOTP.newToken
+          : verifyOTP.user.token
+      );
+
+      navigation.navigate("App", { screen: "Wallet", params: verifyOTP.user });
+      setLoading(false);
+    } catch (error) {
+      Alert.alert(`ERROR: ${error.message}`);
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <ActivityIndicator
+        size="large"
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          top: 0,
+          bottom: 0,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+        color="#B619A7"
+        // animating={loading}
+      />
+    );
+  }
 
   return (
     <View
@@ -123,7 +192,7 @@ const OtpVerificationScreen = ({ navigation, route }) => {
               fontFamily: "Montserrat",
             }}
           >
-            {route.params.email}
+            {route.params.signinup.email}
           </Text>
         </View>
 
@@ -299,13 +368,7 @@ const OtpVerificationScreen = ({ navigation, route }) => {
 
         {/* Verify button part */}
         <View style={{ flex: 0.4 }}>
-          <CustomButton
-            label={"Verify"}
-            onPress={() => {
-              navigation.navigate("App", { screen: "Wallet" });
-              // navigation.navigate("QR");
-            }}
-          />
+          <CustomButton label={"Verify"} onPress={handleVerification} />
         </View>
       </View>
     </View>

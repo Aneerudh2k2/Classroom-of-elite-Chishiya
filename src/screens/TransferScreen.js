@@ -9,12 +9,14 @@ import {
   Image,
   FlatList,
   Alert,
+  Easing,
 } from "react-native";
 import LottieView from "lottie-react-native";
 import React, { useState, useEffect, useRef } from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import * as Clipboard from "expo-clipboard";
+import * as SecureStore from "expo-secure-store";
 
 const TransferScreen = ({ navigation, route }) => {
   const txnListHeightAnimatedValue = useRef(new Animated.Value(0)).current;
@@ -143,15 +145,29 @@ const TransferScreen = ({ navigation, route }) => {
   const handleApi = async () => {
     try {
       setLoading(true);
-      let result = await fetch("https://randomuser.me/api?results=150");
+      let token = await SecureStore.getItemAsync("token");
+
+      // let result = await fetch("https://randomuser.me/api?results=150");
+      let result = await fetch(`http://172.18.111.91:3000/user/me`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        mode: "cors",
+        credentials: "same-origin",
+      });
       result = await result.json();
-      if (result.results.length !== 0) {
+
+      if (!result.success) {
         // console.log(result);
         setLoading(false);
+        throw new Error(result.error);
       }
-      setWalletAddress("0x9f4Cf329f4cF376B7ADED854D6054859dd102a2A");
+      setWalletAddress(result.walletDetails.address);
+      setLoading(false);
     } catch (error) {
-      console.log(error);
+      Alert.alert(`ERROR: ${error.message}`);
+      setLoading(false);
     }
   };
 
@@ -163,12 +179,49 @@ const TransferScreen = ({ navigation, route }) => {
     setToValue("");
   };
 
-  const handleSend = () => {
+  const handleSend = async () => {
     // navigation.navigate("MarketPlace");
-    Alert.alert(
-      "Transaction Summary!",
-      `From ${walletAddress}\n To ${toValue}\n Amount ${amount}\n sent successful`
-    );
+
+    try {
+      setLoading(true);
+      let token = await SecureStore.getItemAsync("token");
+      let result = await fetch(
+        `http://172.18.111.91:3000/jrexContract/transferJrex`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            fromAddress: walletAddress,
+            toAddress: toValue,
+            amount,
+          }),
+          mode: "cors",
+          credentials: "same-origin",
+        }
+      );
+
+      result = await result.json();
+
+      if (!result.success) {
+        // console.log(result);
+        setLoading(false);
+        throw new Error(result.error);
+      }
+
+      Alert.alert(
+        "Transaction Summary!",
+        `From ${walletAddress}\n To ${toValue}\n Amount ${amount}\n sent successful`
+      );
+      setLoading(false);
+      setToValue("");
+      setAmount("");
+    } catch (error) {
+      Alert.alert(`ERROR: ${error.message}`);
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -222,6 +275,7 @@ const TransferScreen = ({ navigation, route }) => {
         toValue: 0,
         duration: 200,
         useNativeDriver: false,
+        // easing: Easing.inOut(Easing.linear),
       }).start();
     } else {
       setExpandedId(id);
@@ -229,6 +283,7 @@ const TransferScreen = ({ navigation, route }) => {
         toValue: 1,
         duration: 200,
         useNativeDriver: false,
+        // easing: Easing.inOut(Easing.linear),
       }).start();
     }
   };
@@ -251,7 +306,7 @@ const TransferScreen = ({ navigation, route }) => {
           padding: 5,
         }}
       >
-        {/* username and curreny section */}
+        {/* username and currency section */}
         <View
           style={{
             flex: 0.4,
@@ -522,20 +577,20 @@ const TransferScreen = ({ navigation, route }) => {
             {/* From section */}
             <View
               style={{
-                flex: 0.3,
+                flex: 0.25,
                 margin: 2,
                 // borderWidth: 0.5,
                 flexDirection: "row",
                 justifyContent: "space-between",
                 alignItems: "center",
-                paddingHorizontal: 8,
+                // paddingHorizontal: 8,
                 height: "100%",
               }}
             >
-              <View style={{ flex: 0.2, alignItems: "center" }}>
+              <View style={{ flex: 0.3, alignItems: "center" }}>
                 <Text
                   style={{
-                    fontSize: 18,
+                    fontSize: 15,
                     color: "#90708c",
                     fontFamily: "Montserrat",
                   }}
@@ -545,7 +600,7 @@ const TransferScreen = ({ navigation, route }) => {
               </View>
               <View
                 style={{
-                  flex: 0.8,
+                  flex: 0.7,
                   borderWidth: 0.5,
                   borderRadius: 10,
                   borderColor: "#B619A7",
@@ -592,12 +647,12 @@ const TransferScreen = ({ navigation, route }) => {
             {/* To section */}
             <View
               style={{
-                flex: 0.7,
+                flex: 0.75,
                 margin: 2,
                 // borderWidth: 0.5,
                 justifyContent: "space-between",
                 alignItems: "center",
-                paddingHorizontal: 8,
+                // paddingHorizontal: 8,
                 height: "100%",
               }}
             >
@@ -606,14 +661,19 @@ const TransferScreen = ({ navigation, route }) => {
                 style={{
                   flex: 0.5,
                   // borderWidth: 0.5,
+                  margin: 2,
+                  // borderWidth: 0.5,
                   flexDirection: "row",
+                  justifyContent: "space-between",
                   alignItems: "center",
+                  paddingHorizontal: 8,
+                  height: "100%",
                 }}
               >
-                <View style={{ flex: 0.2, alignItems: "center" }}>
+                <View style={{ flex: 0.3, alignItems: "center" }}>
                   <Text
                     style={{
-                      fontSize: 18,
+                      fontSize: 15,
                       color: "#90708c",
                       fontFamily: "Montserrat",
                     }}
@@ -624,7 +684,7 @@ const TransferScreen = ({ navigation, route }) => {
 
                 <View
                   style={{
-                    flex: 0.8,
+                    flex: 0.7,
                     borderWidth: 0.5,
                     borderRadius: 10,
                     borderColor: "#B619A7",
@@ -643,12 +703,10 @@ const TransferScreen = ({ navigation, route }) => {
                       flex: 0.8,
                       // borderWidth: 0.5,
                       padding: 5,
-                      // width: "90%",
+                      width: "100%",
                     }}
                     value={toValue}
-                    onChangeText={(value) => {
-                      setToValue(value);
-                    }}
+                    onChangeText={setToValue}
                     cursorColor={"#B619A7"}
                   />
 
@@ -671,10 +729,10 @@ const TransferScreen = ({ navigation, route }) => {
                 </View>
               </View>
 
-              {/* to section buttons part */}
+              {/* to section amount part */}
               <View
                 style={{
-                  flex: 0.3,
+                  flex: 0.5,
                   margin: 2,
                   // borderWidth: 0.5,
                   flexDirection: "row",
@@ -684,10 +742,10 @@ const TransferScreen = ({ navigation, route }) => {
                   height: "100%",
                 }}
               >
-                <View style={{ flex: 0.2, alignItems: "center" }}>
+                <View style={{ flex: 0.3, alignItems: "center" }}>
                   <Text
                     style={{
-                      fontSize: 18,
+                      fontSize: 15,
                       color: "#90708c",
                       fontFamily: "Montserrat",
                     }}
@@ -697,14 +755,15 @@ const TransferScreen = ({ navigation, route }) => {
                 </View>
                 <View
                   style={{
-                    flex: 0.8,
+                    flex: 0.7,
                     borderWidth: 0.5,
                     borderRadius: 10,
                     borderColor: "#B619A7",
                     flexDirection: "row",
                     justifyContent: "space-around",
                     paddingVertical: 5,
-                    // alignItems: "center",
+                    width: "100%",
+                    alignItems: "center",
                   }}
                 >
                   <TextInput
@@ -713,14 +772,13 @@ const TransferScreen = ({ navigation, route }) => {
                     style={{
                       height: "100%",
                       fontSize: 15,
+                      // flex: 0.8,
                       // borderWidth: 0.5,
                       padding: 5,
                       width: "100%",
                     }}
                     value={amount}
-                    onChangeText={(values) => {
-                      setAmount(values);
-                    }}
+                    onChangeText={setAmount}
                     cursorColor={"#B619A7"}
                     clearButtonMode={"always"}
                   />
@@ -744,10 +802,10 @@ const TransferScreen = ({ navigation, route }) => {
                 </View>
               </View>
 
-              {/*  section */}
+              {/*  buttons section */}
               <View
                 style={{
-                  flex: 0.5,
+                  flex: 0.6,
                   flexDirection: "row",
                   // borderWidth: 0.5,
                   justifyContent: "space-around",

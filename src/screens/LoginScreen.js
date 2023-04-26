@@ -52,18 +52,42 @@ const LoginScreen = ({ navigation }) => {
 
   useEffect(() => {
     const authenticate = async () => {
-      const result = await LocalAuth.authenticateAsync({
-        promptMessage: "Login to Chishiya",
-        cancelLabel: "Cancel",
-        requireConfirmation: true,
-      });
-      if (!result.success) {
-        console.log(result);
+      const isLocalAuthEnabled = await AsyncStorage.getItem("biometric");
+
+      if (isLocalAuthEnabled === "true") {
+        const result = await LocalAuth.authenticateAsync({
+          promptMessage: "Login to Chishiya",
+          cancelLabel: "Cancel",
+          requireConfirmation: true,
+        });
+        if (!result.success) {
+          console.log(result);
+        } else {
+          setIsAuthenticated(result.success);
+          navigation.navigate("App", { screen: "Wallet" });
+        }
       } else {
-        setIsAuthenticated(result.success);
-        navigation.navigate("App", { screen: "Wallet" });
+        Alert.alert(
+          "Protect Now!",
+          "Enable biometric now to Secure your account!",
+          [
+            {
+              text: "Cancel",
+              onPress: async () => {
+                await AsyncStorage.setItem("biometric", "false");
+              },
+            },
+            {
+              text: "Enable Now",
+              onPress: async () => {
+                await AsyncStorage.setItem("biometric", "true");
+              },
+            },
+          ]
+        );
       }
     };
+
     authenticate();
   }, []);
 

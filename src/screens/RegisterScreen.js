@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -6,6 +6,9 @@ import {
   Text,
   TouchableOpacity,
   Image,
+  TextInput,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
 
 import DatePicker from "react-native-date-picker";
@@ -22,9 +25,68 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 // import TwitterSVG from "../assets/images/twitter.svg";
 
 const RegisterScreen = ({ navigation }) => {
-  const [date, setDate] = React.useState(new Date());
-  const [open, setOpen] = React.useState(false);
-  const [dobLabel, setDobLabel] = React.useState("Date of Birth");
+  // const [date, setDate] = React.useState(new Date());
+  // const [open, setOpen] = React.useState(false);
+  // const [dobLabel, setDobLabel] = React.useState("Date of Birth");
+  const [loading, setLoading] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+
+  const handleRegisterButton = async () => {
+    try {
+      setLoading(true);
+      if (name === "" || email === "") {
+        Alert.alert("Please provide all the details!!");
+        setLoading(false);
+      }
+      let signinup = await fetch(`http://192.168.43.99:3000/signinup`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+        }),
+        mode: "cors",
+        credentials: "same-origin",
+      });
+
+      signinup = await signinup.json();
+
+      if (!signinup.success) {
+        setLoading(false);
+        throw new Error(signinup.error);
+      }
+
+      navigation.navigate("OTP", {
+        signinup,
+      });
+      setLoading(false);
+    } catch (error) {
+      Alert.alert(`ERROR: ${error.message}`);
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <ActivityIndicator
+        size="large"
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          top: 0,
+          bottom: 0,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+        color="#B619A7"
+        // animating={loading}
+      />
+    );
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: "center" }}>
@@ -101,7 +163,7 @@ const RegisterScreen = ({ navigation }) => {
           Or, register with email ...
         </Text> */}
 
-        <InputField
+        {/* <InputField
           label={"Full Name"}
           icon={
             <Ionicons
@@ -111,9 +173,40 @@ const RegisterScreen = ({ navigation }) => {
               style={{ marginRight: 5 }}
             />
           }
-        />
+        /> */}
 
-        <InputField
+        <View
+          style={{
+            flexDirection: "row",
+            borderBottomColor: "#ccc",
+            borderBottomWidth: 1,
+            paddingBottom: 8,
+            marginBottom: 25,
+          }}
+        >
+          <Ionicons
+            name="person-outline"
+            size={20}
+            color="#666"
+            style={{ marginRight: 5 }}
+          />
+          <TextInput
+            placeholder={"Full Name"}
+            style={{ flex: 1, paddingVertical: 0 }}
+            cursorColor={"#AD40AF"}
+            caretHidden={false}
+            value={name}
+            onChangeText={setName}
+          />
+
+          {/* <TouchableOpacity onPress={fieldButtonFunction}>
+        <Text style={{ color: "#AD40AF", fontWeight: "700" }}>
+          {fieldButtonLabel}
+        </Text>
+      </TouchableOpacity> */}
+        </View>
+
+        {/* <InputField
           label={"Email ID"}
           icon={
             <MaterialIcons
@@ -124,9 +217,40 @@ const RegisterScreen = ({ navigation }) => {
             />
           }
           keyboardType="email-address"
-        />
+        /> */}
 
-        <InputField
+        <View
+          style={{
+            flexDirection: "row",
+            borderBottomColor: "#ccc",
+            borderBottomWidth: 1,
+            paddingBottom: 8,
+            marginBottom: 25,
+          }}
+        >
+          <MaterialIcons
+            name="alternate-email"
+            size={20}
+            color="#666"
+            style={{ marginRight: 5 }}
+          />
+          <TextInput
+            placeholder={"Email ID"}
+            style={{ flex: 1, paddingVertical: 0 }}
+            cursorColor={"#AD40AF"}
+            caretHidden={false}
+            keyboardType={"email-address"}
+            value={email}
+            onChangeText={setEmail}
+          />
+
+          {/* <TouchableOpacity onPress={fieldButtonFunction}>
+        <Text style={{ color: "#AD40AF", fontWeight: "700" }}>
+          {fieldButtonLabel}
+        </Text>
+      </TouchableOpacity> */}
+        </View>
+        {/* <InputField
           label={"Password"}
           icon={
             <Ionicons
@@ -150,9 +274,9 @@ const RegisterScreen = ({ navigation }) => {
             />
           }
           inputType="password"
-        />
+        /> */}
 
-        <View
+        {/* <View
           style={{
             flexDirection: "row",
             borderBottomColor: "#ccc",
@@ -179,9 +303,9 @@ const RegisterScreen = ({ navigation }) => {
               {dobLabel}
             </Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
 
-        <DatePicker
+        {/* <DatePicker
           modal
           open={open}
           date={date}
@@ -196,9 +320,9 @@ const RegisterScreen = ({ navigation }) => {
           onCancel={() => {
             setOpen(false);
           }}
-        />
+        /> */}
 
-        <CustomButton label={"Register"} onPress={() => {}} />
+        <CustomButton label={"Register"} onPress={handleRegisterButton} />
 
         <View
           style={{

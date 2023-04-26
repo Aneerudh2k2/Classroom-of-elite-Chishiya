@@ -9,6 +9,7 @@ import {
   ScrollView,
   RefreshControl,
   Keyboard,
+  Alert,
 } from "react-native";
 import React, { useRef, useState, useEffect } from "react";
 import QRCode from "react-native-qrcode-svg";
@@ -16,30 +17,48 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import Feather from "react-native-vector-icons/Feather";
 import * as Clipboard from "expo-clipboard";
 import LottieView from "lottie-react-native";
+import * as SecureStore from "expo-secure-store";
 // import { ethers } from "ethers";
 
-const WalletScreen = ({ navigation }) => {
+const WalletScreen = ({ route, navigation }) => {
   const flipAnimation = useRef(new Animated.Value(0)).current;
   const [isFlipped, setIsFlipped] = useState(false);
   const qrRef = useRef();
   const [copiedText, setCopiedText] = React.useState("");
-  const [balance, setBalance] = React.useState(79.98);
+  const [name, setName] = useState("");
+  const [balance, setBalance] = React.useState();
   const [loading, setLoading] = useState(false);
-  const [walletAddress, setWalletAddress] = useState(
-    "0x64a7885CB27dc6C18096E97705C45C997d943240"
-  );
+  const [walletAddress, setWalletAddress] = useState("");
 
   const handleApi = async () => {
     try {
       setLoading(true);
-      let result = await fetch("https://randomuser.me/api?results=150");
-      result = await result.json();
-      if (result.results.length !== 0) {
-        // console.log(result);
+      let token = await SecureStore.getItemAsync("token");
+      // let result = await fetch("https://randomuser.me/api?results=150");
+      let user = await fetch(`http://172.18.111.91:3000/user/me`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        mode: "cors",
+        credentials: "same-origin",
+      });
+      user = await user.json();
+
+      console.log(user);
+
+      if (!user.success) {
         setLoading(false);
+        throw new Error(user.error);
       }
+
+      setBalance(user.balance);
+      setName(user.name);
+      setWalletAddress(user.walletDetails.address);
+      setLoading(false);
     } catch (error) {
-      console.log(error);
+      Alert.alert(`ERROR: ${error.message}`);
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -257,7 +276,10 @@ const WalletScreen = ({ navigation }) => {
                     fontFamily: "Montserrat",
                   }}
                 >
-                  Satoshi Nakamoto
+                  {/* {console.log(route)}
+                  {/* {route.params.name} */}
+
+                  {name}
                 </Text>
               </View>
 
