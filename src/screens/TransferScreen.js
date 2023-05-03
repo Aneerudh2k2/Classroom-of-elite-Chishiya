@@ -148,7 +148,7 @@ const TransferScreen = ({ navigation, route }) => {
       let token = await SecureStore.getItemAsync("token");
 
       // let result = await fetch("https://randomuser.me/api?results=150");
-      let result = await fetch(`http://172.18.111.91:3000/user/me`, {
+      let result = await fetch(`http://192.168.43.99:3000/user/me`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -186,7 +186,7 @@ const TransferScreen = ({ navigation, route }) => {
       setLoading(true);
       let token = await SecureStore.getItemAsync("token");
       let result = await fetch(
-        `http://172.18.111.91:3000/jrexContract/transferJrex`,
+        `http://192.168.43.99:3000/jrexContract/transferJrex`,
         {
           method: "POST",
           headers: {

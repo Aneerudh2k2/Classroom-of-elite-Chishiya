@@ -29,7 +29,7 @@ const NavBar = ({ navigation, route }) => {
     >
       <TouchableOpacity
         style={{ margin: 3, paddingLeft: 15, width: 45, flex: 0.1 }}
-        onPress={() => navigation.goBack()}
+        onPress={() => navigation.navigate("Login")}
       >
         <AntDesign
           name="arrowleft"
@@ -82,27 +82,41 @@ const OtpVerificationScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     code1Ref.current.focus();
+    console.log(code);
   }, []);
 
   const handleVerification = async () => {
     try {
       setLoading(true);
-      console.log({ code, signinup: route.params.signinup });
+      console.log({
+        code,
+        signinup: route.params.signinup,
+        login: route.params.login,
+      });
 
       let verifyOTP = await fetch(`http://192.168.43.99:3000/verifyOTP`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          from: route.params.signinup.from,
-          OTP: code,
-          name: route.params.signinup.name,
-          email: route.params.signinup.email,
-          OTPresult: route.params.signinup.OTPresult,
-          token: route.params.signinup.token,
-          walletDetails: route.params.signinup.walletDetails,
-        }),
+        body: JSON.stringify(
+          route.params.signinup
+            ? {
+                from: route.params.signinup.from,
+                OTP: code,
+                name: route.params.signinup.name,
+                email: route.params.signinup.email,
+                OTPresult: route.params.signinup.OTPresult,
+                token: route.params.signinup.token,
+                walletDetails: route.params.signinup.walletDetails,
+              }
+            : {
+                from: route.params.login.from,
+                email: route.params.login.email,
+                OTP: code,
+                OTPresult: route.params.login.OTPresult,
+              }
+        ),
         mode: "cors",
         credentials: "same-origin",
       });
@@ -117,15 +131,14 @@ const OtpVerificationScreen = ({ navigation, route }) => {
       // save the auth token to secure store
       await SecureStore.setItemAsync(
         "token",
-        route.params.signinup.from === "Login"
-          ? verifyOTP.newToken
-          : verifyOTP.user.token
+        route.params.signinup ? verifyOTP.user.token : verifyOTP.newToken
       );
 
-      navigation.navigate("App", { screen: "Wallet", params: verifyOTP.user });
+      navigation.navigate("App", { screen: "Wallet" });
       setLoading(false);
     } catch (error) {
       Alert.alert(`ERROR: ${error.message}`);
+      code = [];
       setLoading(false);
     }
   };
@@ -192,7 +205,9 @@ const OtpVerificationScreen = ({ navigation, route }) => {
               fontFamily: "Montserrat",
             }}
           >
-            {route.params.signinup.email}
+            {route.params.signinup
+              ? route.params.signinup.email
+              : route.params.login.email}
           </Text>
         </View>
 

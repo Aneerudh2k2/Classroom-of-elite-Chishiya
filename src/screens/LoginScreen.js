@@ -8,6 +8,7 @@ import {
   TextInput,
   Alert,
   StatusBar,
+  ActivityIndicator,
 } from "react-native";
 
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
@@ -49,6 +50,7 @@ SplashScreen.preventAutoHideAsync();
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   let [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const authenticate = async () => {
@@ -88,7 +90,7 @@ const LoginScreen = ({ navigation }) => {
       }
     };
 
-    authenticate();
+    // authenticate();
   }, []);
 
   const [fontsLoaded] = useFonts({
@@ -103,6 +105,55 @@ const LoginScreen = ({ navigation }) => {
 
   if (!fontsLoaded) {
     return null;
+  }
+
+  const handleSendOTP = async () => {
+    try {
+      setLoading(true);
+      let login = await fetch("http://192.168.43.99:3000/login", {
+        method: "POST",
+        mode: "cors", // no-cors, *cors, same-origin
+        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+        }),
+      });
+      login = await login.json();
+      console.log(login);
+      if (!login.success) {
+        setLoading(false);
+        throw new Error(login.error);
+      }
+
+      navigation.navigate("OTP", {
+        login,
+      });
+      setLoading(false);
+    } catch (error) {
+      Alert.alert(`ERROR: ${error.message}`);
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <ActivityIndicator
+        size="large"
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          top: 0,
+          bottom: 0,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+        color="#B619A7"
+        // animating={loading}
+      />
+    );
   }
 
   return (
@@ -197,35 +248,7 @@ const LoginScreen = ({ navigation }) => {
         //   fieldButtonLabel={"Forgot?"}
         //   fieldButtonFunction={() => {}}
         // /> */}
-          <CustomButton
-            label={"Send OTP"}
-            onPress={async () => {
-              navigation.navigate("OTP", {
-                email: "devcrazapp@gmail.com",
-              });
-              // console.log(email);
-              // let response = await fetch(
-              //   "http://192.168.43.99:5000/api/auth/signinup/code/",
-              //   {
-              //     method: "POST",
-              //     mode: "cors", // no-cors, *cors, same-origin
-              //     cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-              //     credentials: "same-origin",
-              //     headers: { "Content-Type": "application/json" },
-              //     body: JSON.stringify({
-              //       email: email,
-              //     }),
-              //   }
-              // );
-              // response = await response.json();
-              // console.log(response);
-              // if (response.status === "OK") {
-              //   navigation.navigate("OTP", {email});
-              // } else {
-              //   Alert.alert("Failed to login!!", "Try again");
-              // }
-            }}
-          />
+          <CustomButton label={"Send OTP"} onPress={handleSendOTP} />
           <Text
             style={{
               textAlign: "center",
